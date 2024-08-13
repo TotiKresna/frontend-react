@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import { useNavigate } from 'react-router-dom';
 
 const NavLink = () => {
     return (
@@ -30,6 +31,13 @@ const NavLink = () => {
 export default function Nav() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
+
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
@@ -42,6 +50,7 @@ export default function Nav() {
                 {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
               </Button>
               </Stack>
+              <Button onClick={handleLogout} colorScheme="red">Logout</Button>
           </Flex>
         </Flex>
       </Box>

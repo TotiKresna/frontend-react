@@ -76,15 +76,13 @@ const TestResults = () => {
 
   return (
     <Box p="5">
-      <Button as={Link} to="/test-results/create">
+      <Button colorScheme="blue" as={Link} to="/test-results/create">
         Create Test Result
       </Button>
       <Button colorScheme="red" ml="3" onClick={handleDeleteMultiple}>
         Delete Selected
       </Button>
-      <Button as={Link} to="/test-results/import" ml="3">
-        Import Excel
-      </Button>
+
       <Table variant="simple" mt="5">
         <Thead>
           <Tr>

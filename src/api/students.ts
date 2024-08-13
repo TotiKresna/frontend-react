@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://backend-simmd.vercel.app';
+const BASE_URL = 'http://localhost:5000';
 
 export const fetchStudents = async () => {
   return axios.get(`${BASE_URL}/students`);
