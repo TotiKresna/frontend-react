@@ -1,66 +1,125 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { 
+  Button, 
+  FormControl, 
+  FormLabel, 
+  Input, 
+  VStack, 
+  Box, 
+  Heading, 
+  useToast, 
+  Text, 
+  Link,
+  Flex,
+  FormErrorMessage
+} from "@chakra-ui/react";
 import { register, setAuthToken } from '../api/auth';
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<'admin' | 'teacher' | 'student'>('student');
-  const [error, setError] = useState('');
-  const navigate = useNavigate(); 
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+  const navigate = useNavigate();
+  const toast = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-
+    if (password !== confirmPassword) {
+      setPasswordError('Passwords do not match');
+      return;
+    }
+    setPasswordError('');
+    setIsLoading(true);
     try {
-      const { token } = await register(username, password, role);
+      // Assuming the backend expects a role, we'll send 'user' as default
+      const { token } = await register(username, password, 'user');
       setAuthToken(token);
-      navigate('/dashboard'); 
+      toast({
+        title: "Registrasi berhasil",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+      navigate('/dashboard');
     } catch (error) {
       console.error('Registration failed:', error);
-      setError('Registration failed. Please try again.');
+      toast({
+        title: "Registrasi gagal",
+        description: "Silakan coba lagi",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Register</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <div>
-        <label htmlFor="username">Username:</label>
-        <input
-          type="text"
-          id="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="role">Role:</label>
-        <select
-          id="role"
-          value={role}
-          onChange={(e) => setRole(e.target.value as 'admin' | 'teacher' | 'student')}
-        >
-          <option value="student">Student</option>
-          <option value="teacher">Teacher</option>
-          <option value="admin">Admin</option>
-        </select>
-      </div>
-      <button type="submit">Register</button>
-    </form>
+    <Flex minHeight="100vh" width="full" align="center" justifyContent="center">
+      <Box 
+        borderWidth={1}
+        px={4}
+        width="full"
+        maxWidth="500px"
+        borderRadius={4}
+        textAlign="center"
+        boxShadow="lg"
+      >
+        <Box p={4}>
+          <Heading as="h1" size="lg" mb={6}>Register</Heading>
+          <form onSubmit={handleSubmit}>
+            <VStack spacing={4}>
+              <FormControl isRequired>
+                <FormLabel>Username</FormLabel>
+                <Input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Username"
+                />
+              </FormControl>
+              <FormControl isRequired>
+                <FormLabel>Password</FormLabel>
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                />
+              </FormControl>
+              <FormControl isRequired isInvalid={!!passwordError}>
+                <FormLabel>Confirm Password</FormLabel>
+                <Input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm Password"
+                />
+                <FormErrorMessage>{passwordError}</FormErrorMessage>
+              </FormControl>
+              <Button
+                type="submit"
+                colorScheme="blue"
+                width="full"
+                isLoading={isLoading}
+              >
+                Register
+              </Button>
+            </VStack>
+          </form>
+          <Text mt={4}>
+            Sudah punya akun?{" "}
+            <Link as={RouterLink} to="/login" color="blue.500">
+              Login di sini
+            </Link>
+          </Text>
+        </Box>
+      </Box>
+    </Flex>
   );
 };
 

@@ -1,7 +1,7 @@
 import { Box, Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchStudents, createStudent, updateStudent } from '../api/students';
+import { createStudent, getStudentById, updateStudent } from '../api/students';
 import useToaster from '../components/Toaster';
 import Loader from '../components/Loader';
 
@@ -14,25 +14,26 @@ const EditStudent = () => {
 
   useEffect(() => {
     if (id) {
-      fetchStudents()
+      setLoading(true);
+      getStudentById(id)
         .then((response) => {
-          const foundStudent = response.data.find((student: any) => student.id === parseInt(id));
-          setStudent(foundStudent);
+          setStudent(response.data);
           setLoading(false);
         })
         .catch((error) => {
           console.error(error);
           setLoading(false);
+          showToast('Error', 'Failed to fetch student data', 'error');
         });
     } else {
       setLoading(false);
     }
   }, [id]);
-
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (id) {
-      updateStudent(parseInt(id), student)
+      updateStudent(id, student)
         .then(() => {
           showToast('Success', 'Student updated successfully', 'success');
           navigate('/students');

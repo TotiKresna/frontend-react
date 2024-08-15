@@ -100,16 +100,18 @@ const NavItem = ({ icon, route, children, ...rest }: NavItemProps) => {
     to={route}
     style={{ textDecoration: 'none', width: '100%' }}
   >
+     {({ isActive }) => (
       <Flex
         align="center"
         p="4"
         mx="4"
-        borderRadius="lg"
+        borderRadius="md"
         role="group"
         cursor="pointer"
+        color={isActive ? 'teal.400' : 'gray.500'}
         _hover={{
-          bg: 'teal.200',
-          color: 'white',
+          bg: 'transparent',
+          color: 'gray.400',
         }}
         {...rest}
       >
@@ -118,13 +120,14 @@ const NavItem = ({ icon, route, children, ...rest }: NavItemProps) => {
             mr="4"
             fontSize="16"
             _groupHover={{
-              color: 'white',
+              color: 'gray.500',
             }}
             as={icon}
           />
         )}
         {children}
       </Flex>
+     )}
     </NavLink>
   );
 };

@@ -5,7 +5,7 @@ const theme = extendTheme({
   styles: {
     global: (props: any) => ({
       body: {
-        bg: mode('white', 'gray.800')(props),
+        bg: mode('white', 'gray.600')(props),
         
       },
     }),
@@ -23,6 +23,9 @@ const theme = extendTheme({
   fonts: {
     heading: '"Poppins", sans-serif',
     body: '"Open Sans", sans-serif',
+  },
+  fontWeight: {
+    body: '500'
   },
   colors: {
     brand: {

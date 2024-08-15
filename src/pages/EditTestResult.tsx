@@ -103,7 +103,7 @@ const EditTestResult = () => {
             disabled={!!id}  // Disable if id exists (edit mode)
           />
         </FormControl>
-        <FormControl isRequired mt="3">
+        <FormControl  mt="3">
           <FormLabel>OPM Tambah</FormLabel>
           <Input
             type="number"
@@ -111,7 +111,7 @@ const EditTestResult = () => {
             onChange={(e) => setTestResult({ ...testResult, opm_tambah: e.target.value })}
           />
         </FormControl>
-        <FormControl isRequired mt="3">
+        <FormControl  mt="3">
           <FormLabel>OPM Kurang</FormLabel>
           <Input
             type="number"
@@ -119,7 +119,7 @@ const EditTestResult = () => {
             onChange={(e) => setTestResult({ ...testResult, opm_kurang: e.target.value })}
           />
         </FormControl>
-        <FormControl isRequired mt="3">
+        <FormControl  mt="3">
           <FormLabel>OPM Kali</FormLabel>
           <Input
             type="number"
@@ -127,7 +127,7 @@ const EditTestResult = () => {
             onChange={(e) => setTestResult({ ...testResult, opm_kali: e.target.value })}
           />
         </FormControl>
-        <FormControl isRequired mt="3">
+        <FormControl  mt="3">
           <FormLabel>OPM Bagi</FormLabel>
           <Input
             type="number"

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { 
   Button, 
   FormControl, 
@@ -9,40 +9,46 @@ import {
   Box, 
   Heading, 
   useToast, 
-  Text, 
-  Link,
-  Flex
+  Flex,
+  Select,
 } from "@chakra-ui/react";
-import { login, setAuthToken } from '../api/auth';
+import { createAdmin } from '../api/auth'; // You'll need to create this function
 
-const Login: React.FC = () => {
+const AdminRegister: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [role, setRole] = useState('admin');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      toast({
+        title: "Passwords do not match",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
     setIsLoading(true);
     try {
-      const { token, role } = await login(username, password);
-      setAuthToken(token);
-      localStorage.setItem('token', token);
-      localStorage.setItem('username', username);
-      localStorage.setItem('role', role);
+      await createAdmin(username, password, role);
       toast({
-        title: "Login berhasil",
+        title: "Admin account created successfully",
         status: "success",
         duration: 2000,
         isClosable: true,
       });
       navigate('/dashboard');
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error('Admin registration failed:', error);
       toast({
-        title: "Login gagal",
-        description: "Username atau password salah",
+        title: "Registration failed",
+        description: "Please try again",
         status: "error",
         duration: 2000,
         isClosable: true,
@@ -64,7 +70,7 @@ const Login: React.FC = () => {
         boxShadow="lg"
       >
         <Box p={4}>
-          <Heading as="h1" size="lg" mb={6}>Login</Heading>
+          <Heading as="h1" size="lg" mb={6}>Create Admin Account</Heading>
           <form onSubmit={handleSubmit}>
             <VStack spacing={4}>
               <FormControl isRequired>
@@ -85,26 +91,36 @@ const Login: React.FC = () => {
                   placeholder="Password"
                 />
               </FormControl>
+              <FormControl isRequired>
+                <FormLabel>Confirm Password</FormLabel>
+                <Input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm Password"
+                />
+              </FormControl>
+              <FormControl isRequired>
+                <FormLabel>Role</FormLabel>
+                <Select value={role} onChange={(e) => setRole(e.target.value)}>
+                  <option value="admin">Admin</option>
+                  <option value="superadmin">Superadmin</option>
+                </Select>
+              </FormControl>
               <Button
                 type="submit"
                 colorScheme="blue"
                 width="full"
                 isLoading={isLoading}
               >
-                Login
+                Create Admin Account
               </Button>
             </VStack>
           </form>
-          <Text mt={4}>
-            Belum punya akun?{" "}
-            <Link as={RouterLink} to="/register" color="blue.500">
-              Daftar di sini
-            </Link>
-          </Text>
         </Box>
       </Box>
     </Flex>
   );
 };
 
-export default Login;
+export default AdminRegister;
