@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://api-totikresna-projects.vercel.app/';
+const API_URL = 'http://localhost:5000';
 
 export const login = async (username: string, password: string) => {
   const response = await axios.post(`${API_URL}/auth/login`, { username, password});
