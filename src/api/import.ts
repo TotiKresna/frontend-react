@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = 'https://api-totikresna-projects.vercel.app/';
 
 export const importExcel = async (file: File) => {
   const formData = new FormData();
