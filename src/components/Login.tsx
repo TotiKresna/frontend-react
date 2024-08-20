@@ -28,7 +28,6 @@ const Login: React.FC = () => {
     try {
       const { token, role } = await login(username, password);
       setAuthToken(token);
-      localStorage.setItem('token', token);
       localStorage.setItem('username', username);
       localStorage.setItem('role', role);
       toast({

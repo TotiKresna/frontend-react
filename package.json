@@ -1,6 +1,7 @@
 {
   "name": "frontend-react",
   "version": "0.1.0",
+  "homepage": "https://toti.69dev.id/",
   "private": true,
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",

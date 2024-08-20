@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon, LockIcon, AddIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
+import { logout } from '../api/auth';
 
 export default function Header() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -29,11 +30,15 @@ export default function Header() {
     if (storedUserRole) setUserRole(storedUserRole);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    localStorage.removeItem('role');
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      await logout();
+      localStorage.removeItem('username');
+      localStorage.removeItem('role');
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   return (

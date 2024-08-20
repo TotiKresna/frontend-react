@@ -1,13 +1,28 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000';
+const API_URL = 'https://backend-api-rosy.vercel.app';
+
+axios.defaults.withCredentials = true;
 
 export const login = async (username: string, password: string) => {
-  const response = await axios.post(`${API_URL}/auth/login`, { username, password});
-  const { token, role } = response.data;
-  return { token, role };
+  const response = await axios.post(`${API_URL}/auth/login`, { username, password });
+  return response.data;
 };
 
+export const logout = async () => {
+  await axios.post(`${API_URL}/auth/logout`);
+};
+
+export const checkAuth = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/auth/check`, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 export const register = async (username: string, password: string, role: string = 'user') => {
     const response = await axios.post(`${API_URL}/auth/register`, { username, password, role });
     return response.data;
@@ -16,10 +31,6 @@ export const register = async (username: string, password: string, role: string 
 export const createAdmin = async (username: string, password: string, role: string = 'admin') => {
   const response = await axios.post(`${API_URL}/auth/create-admin`, { username, password, role });
   return response.data;
-};
-
-export const logout = () => {
-  localStorage.removeItem('token');
 };
 
 export const setAuthToken = (token: string) => {

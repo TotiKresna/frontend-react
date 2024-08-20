@@ -1,19 +1,29 @@
-import React from 'react';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
+import { checkAuth } from '../api/auth';
 
-interface PrivateRouteProps {
-  redirectPath?: string;
-}
+const PrivateRoute: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ redirectPath = '/login' }) => {
-  const location = useLocation();
-  const isAuthenticated = !!localStorage.getItem('token');
+  useEffect(() => {
+    const verifyAuth = async () => {
+      try {
+        await checkAuth();
+        setIsAuthenticated(true);
+      } catch (error) {
+        setIsAuthenticated(false);
+      }
+    };
 
-  if (!isAuthenticated) {
-    return <Navigate to={redirectPath} state={{ from: location }} replace />;
+    verifyAuth();
+  }, []);
+
+  if (isAuthenticated === null) {
+    return <div>Loading...</div>;
   }
 
-  return <Outlet />;
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
 };
+
 
 export default PrivateRoute;
