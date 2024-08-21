@@ -1,6 +1,6 @@
 import { Box, Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { fetchTestResults, createTestResult, updateTestResult } from '../api/testResults';
 import useToaster from '../components/Toaster';
 import Loader from '../components/Loader';
@@ -137,6 +137,9 @@ const EditTestResult = () => {
         </FormControl>
         <Button type="submit" mt="5" colorScheme="blue">
           {id ? 'Update' : 'Create'}
+        </Button>
+        <Button as={Link} to="/test-results" mt="5" ml="3" colorScheme="gray">
+          Back
         </Button>
       </form>
     </Box>
