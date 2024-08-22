@@ -11,6 +11,7 @@ export const login = async (username: string, password: string) => {
 
 export const logout = async () => {
   await axios.post(`${API_URL}/auth/logout`);
+  localStorage.removeItem('token');
 };
 
 export const checkAuth = async () => {
