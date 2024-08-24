@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = 'https://frontend-react-liart.vercel.app';
 
 export const fetchTestResults = async () => {
   return axios.get(`${BASE_URL}/api/test-results`);
