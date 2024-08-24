@@ -10,7 +10,7 @@ import EditTestResult from "./pages/EditTestResult";
 import ImportExcel from "./pages/ImportExcel";
 import Login from './components/Login';
 import Register from './components/Register';
-import AdminRegister from './components/AdminRegister';
+
 import PrivateRoute from './components/PrivateRoute';
 import Layout from "./components/Layout";
 import theme from "./theme";
@@ -26,7 +26,7 @@ function App() {
               <Route element={<PrivateRoute />}>
                 <Route element={<Layout />}>
                   <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/admin-register" element={<AdminRegister />} />
+
                   <Route path="/students" element={<Students />} />
                   <Route path="/students/create" element={<EditStudent />} />
                   <Route path="/students/:id/edit" element={<EditStudent />} />

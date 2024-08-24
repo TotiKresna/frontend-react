@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://backend-api-rosy.vercel.app';
+const API_URL = 'http://localhost:5000';
 
 axios.defaults.withCredentials = true;
 
@@ -29,9 +29,36 @@ export const register = async (username: string, password: string, role: string 
     return response.data;
 };
 
-export const createAdmin = async (username: string, password: string, role: string = 'admin') => {
+export const createUser = async (username: string, password: string, role: string = 'admin') => {
   const response = await axios.post(`${API_URL}/auth/create-admin`, { username, password, role });
   return response.data;
+};
+
+export const getUsers = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/auth/superadmin/users`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateUser = async (id: string, username: string, password?: string, role?: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/auth/superadmin/updateUser`, { id, username, password, role });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteUser = async (id: string) => {
+  try {
+    const response = await axios.delete(`${API_URL}/auth/superadmin/deleteUser`, { data: { id } });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const setAuthToken = (token: string) => {

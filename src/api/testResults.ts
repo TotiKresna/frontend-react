@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://backend-api-rosy.vercel.app';
+const BASE_URL = 'http://localhost:5000';
 
 export const fetchTestResults = async () => {
   return axios.get(`${BASE_URL}/api/test-results`);

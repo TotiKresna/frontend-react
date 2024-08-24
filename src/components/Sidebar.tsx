@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, useEffect } from 'react';
+import React, { ReactNode } from 'react';
 import {
   IconButton,
   Box,
@@ -6,25 +6,16 @@ import {
   Flex,
   Icon,
   useColorModeValue,
-  useColorMode,
   Drawer,
   DrawerContent,
-  Text,
   useDisclosure,
   BoxProps,
   FlexProps,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Button,
-  Avatar,
 } from '@chakra-ui/react';
 import { FiHome, FiUsers, FiFileText, FiMenu, FiUpload } from 'react-icons/fi';
-import { MoonIcon, SunIcon, LockIcon, AddIcon } from '@chakra-ui/icons';
 import { IconType } from 'react-icons';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { logout } from '../api/auth';
+import { NavLink } from 'react-router-dom';
+import { useProfileMenu } from '../hooks/ProfileMenu';
 
 interface LinkItemProps {
   name: string;
@@ -149,28 +140,8 @@ interface MobileProps extends FlexProps {
 }
 
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
-  const { colorMode, toggleColorMode } = useColorMode();
-  const navigate = useNavigate();
-  const [userName, setUserName] = useState('');
-  const [userRole, setUserRole] = useState('');
+  const { ProfileMenu } = useProfileMenu();
 
-  useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
-    const storedUserRole = localStorage.getItem('role');
-    if (storedUsername) setUserName(storedUsername);
-    if (storedUserRole) setUserRole(storedUserRole);
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      localStorage.removeItem('username');
-      localStorage.removeItem('role');
-      navigate('/login');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -184,47 +155,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       {...rest}
     >
       <IconButton variant="outline" onClick={onOpen} aria-label="open menu" icon={<FiMenu />} />
-
-      <Menu closeOnSelect={false}>
-        {({ isOpen }) => (
-          <>
-            <MenuButton
-              as={Button}
-              rounded={'full'}
-              variant={'link'}
-              cursor={'pointer'}
-              minW={0}>
-              <Avatar
-                size={'sm'}
-                bg='grey'
-                src={'https://bit.ly/broken-link'}
-              />
-            </MenuButton>
-            <MenuList>
-              <Box px={3} py={2}>
-                <Text fontWeight="bold">{userName}</Text>
-              </Box>
-              <MenuItem 
-                onClick={toggleColorMode}
-                closeOnSelect={false}
-              >
-                <Icon as={colorMode === 'light' ? MoonIcon : SunIcon} mr={2} />
-                Change Theme
-              </MenuItem>
-              {userRole === 'superadmin' && (
-                <MenuItem onClick={() => navigate('/admin-register')}>
-                  <Icon as={AddIcon} mr={2} />
-                  Create Admin Account
-                </MenuItem>
-              )}
-              <MenuItem onClick={handleLogout}>
-                <Icon as={LockIcon} mr={2} />
-                Logout
-              </MenuItem>
-            </MenuList>
-          </>
-        )}
-      </Menu>
+      <ProfileMenu />
     </Flex>
   );
 };
