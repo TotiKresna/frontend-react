@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://frontend-react-liart.vercel.app';
+const API_URL = 'https://backend-api-rosy.vercel.app';
 
 axios.defaults.withCredentials = true;
 

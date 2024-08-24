@@ -16,8 +16,8 @@ import {
   Td,
   VStack,
   HStack,
-  useToast,
 } from '@chakra-ui/react';
+import useToaster from '../components/Toaster';
 import { getUsers, deleteUser } from '../api/auth';
 import { useFormAccountModal } from '../modals/FormAccount';
 
@@ -34,7 +34,7 @@ interface ManageAccountsModalProps {
 
 const ManageAccountsModal: React.FC<ManageAccountsModalProps> = ({ isOpen, onClose }) => {
   const [users, setUsers] = useState<User[]>([]);
-  const toast = useToast();
+  const { showToast } = useToaster();
   const { FormAccountModal, handleOpen: handleOpenForm } = useFormAccountModal(fetchUsers);
 
   useEffect(() => {
@@ -47,12 +47,7 @@ const ManageAccountsModal: React.FC<ManageAccountsModalProps> = ({ isOpen, onClo
       setUsers(fetchedUsers);
     } catch (error) {
       console.error('Error fetching users:', error);
-      toast({
-        title: 'Error fetching users',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+      showToast('Error', 'Error fetching users:', 'error');
     }
   }
 
@@ -60,20 +55,11 @@ const ManageAccountsModal: React.FC<ManageAccountsModalProps> = ({ isOpen, onClo
     try {
       await deleteUser(userId);
       fetchUsers(); // Refresh the user list
-      toast({
-        title: 'User deleted successfully',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
+      showToast('Success','User deleted successfully','success');
+
     } catch (error) {
       console.error('Error deleting user:', error);
-      toast({
-        title: 'Error deleting user',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+      showToast('Error', 'Error deleting user:', 'error');
     }
   };
 

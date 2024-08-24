@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://frontend-react-liart.vercel.app';
+const BASE_URL = 'https://backend-api-rosy.vercel.app';
 
 export const fetchTestResults = async () => {
   return axios.get(`${BASE_URL}/api/test-results`);

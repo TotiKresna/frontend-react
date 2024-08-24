@@ -13,9 +13,9 @@ import {
   FormLabel,
   Input,
   Select,
-  useToast,
   useDisclosure,
 } from '@chakra-ui/react';
+import useToaster from '../components/Toaster';
 import { createUser, updateUser } from '../api/auth';
 
 interface User {
@@ -30,7 +30,7 @@ export const useFormAccountModal = (onSuccess: () => void) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
-  const toast = useToast();
+  const { showToast } = useToaster();
 
   useEffect(() => {
     if (user) {
@@ -53,31 +53,17 @@ export const useFormAccountModal = (onSuccess: () => void) => {
     try {
       if (user) {
         await updateUser(user._id, username, password, role);
-        toast({
-          title: 'User updated successfully',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        });
+        showToast('Success','User updated successfully','success');
       } else {
         await createUser(username, password, role);
-        toast({
-          title: 'User created successfully',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        });
+        showToast('Success','User created successfully','success');
       }
       onSuccess();
       onClose();
     } catch (error) {
       console.error('Error submitting user form:', error);
-      toast({
-        title: `Error ${user ? 'updating' : 'creating'} user`,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+      showToast('Error',`Error ${user ? 'updating' : 'creating'} user`, 'error');
+
     }
   };
 
