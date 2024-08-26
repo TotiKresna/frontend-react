@@ -56,7 +56,7 @@ export const useProfileMenu = () => {
               <Avatar
                 size={'sm'}
                 bg='grey'
-                src={'https://bit.ly/broken-link'}
+                src={''}
               />
             </MenuButton>
             <MenuList>

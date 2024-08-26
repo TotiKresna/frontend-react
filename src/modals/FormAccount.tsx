@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -27,48 +27,76 @@ interface User {
 export const useFormAccountModal = (onSuccess: () => void) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user, setUser] = useState<User | null>(null);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [role, setRole] = useState('');
+  const formRef = useRef({
+    username: '',
+    password: '',
+    role: '',
+  });
   const { showToast } = useToaster();
 
-  useEffect(() => {
-    if (user) {
-      setUsername(user.username);
-      setRole(user.role);
+  const resetForm = useCallback((selectedUser: User | null) => {
+    if (selectedUser) {
+      formRef.current = {
+        username: selectedUser.username,
+        password: '',
+        role: selectedUser.role,
+      };
     } else {
-      setUsername('');
-      setPassword('');
-      setRole('');
+      formRef.current = {
+        username: '',
+        password: '',
+        role: '',
+      };
     }
-  }, [user]);
+  }, []);
 
-  const handleOpen = (selectedUser: User | null = null) => {
-    setUser(selectedUser);
+  useEffect(() => {
+    if (isOpen) {
+      resetForm(user);
+    }
+  }, [isOpen, user, resetForm]);
+
+  const handleOpen = useCallback((selectedUser: User | null = null) => {
+    if (selectedUser) {
+      setUser(selectedUser);
+    } else {
+      setUser(null);
+    }
+    resetForm(selectedUser);
     onOpen();
+  }, [onOpen, resetForm]);
+
+  const handleClose = useCallback(() => {
+    setUser(null);
+    resetForm(null);
+    onClose();
+  }, [onClose, resetForm]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    formRef.current[name as keyof typeof formRef.current] = value;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       if (user) {
-        await updateUser(user._id, username, password, role);
-        showToast('Success','User updated successfully','success');
+        await updateUser(user._id, formRef.current.username, formRef.current.password, formRef.current.role);
+        showToast('Success', 'User updated successfully', 'success');
       } else {
-        await createUser(username, password, role);
-        showToast('Success','User created successfully','success');
+        await createUser(formRef.current.username, formRef.current.password, formRef.current.role);
+        showToast('Success', 'User created successfully', 'success');
       }
       onSuccess();
-      onClose();
+      handleClose();
     } catch (error) {
       console.error('Error submitting user form:', error);
-      showToast('Error',`Error ${user ? 'updating' : 'creating'} user`, 'error');
-
+      showToast('Error', `Error ${user ? 'updating' : 'creating'} user`, 'error');
     }
   };
 
-  const FormAccountModal = () => (
-    <Modal isOpen={isOpen} onClose={onClose}>
+  const FormAccountModal = React.memo(() => (
+    <Modal isOpen={isOpen} onClose={handleClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{user ? 'Update User' : 'Create User'}</ModalHeader>
@@ -79,25 +107,28 @@ export const useFormAccountModal = (onSuccess: () => void) => {
               <FormControl isRequired>
                 <FormLabel>Username</FormLabel>
                 <Input
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  name="username"
+                  defaultValue={formRef.current.username}
+                  onChange={handleChange}
                   placeholder="Enter username"
                 />
               </FormControl>
               <FormControl isRequired={!user}>
                 <FormLabel>Password</FormLabel>
                 <Input
+                  name="password"
                   type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  defaultValue={formRef.current.password}
+                  onChange={handleChange}
                   placeholder={user ? 'Leave blank to keep current password' : 'Enter password'}
                 />
               </FormControl>
               <FormControl isRequired>
                 <FormLabel>Role</FormLabel>
                 <Select
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
+                  name="role"
+                  defaultValue={formRef.current.role}
+                  onChange={handleChange}
                   placeholder="Select role"
                 >
                   <option value="user">User</option>
@@ -111,12 +142,12 @@ export const useFormAccountModal = (onSuccess: () => void) => {
             <Button type="submit" colorScheme="blue" mr={3}>
               {user ? 'Update' : 'Create'}
             </Button>
-            <Button variant="ghost" onClick={onClose}>Cancel</Button>
+            <Button variant="ghost" onClick={handleClose}>Cancel</Button>
           </ModalFooter>
         </form>
       </ModalContent>
     </Modal>
-  );
+  ));
 
   return { FormAccountModal, handleOpen };
 };

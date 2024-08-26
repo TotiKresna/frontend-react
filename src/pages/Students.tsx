@@ -1,6 +1,5 @@
 import { Box, Button, Table, Thead, Tbody, Tr, Th, Td, Checkbox, Flex, Heading, Input } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { fetchStudents, deleteMultipleStudents } from '../api/students';
 import Loader from '../components/Loader';
 import useToaster from '../components/Toaster';
@@ -8,6 +7,9 @@ import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { FaPlus, FaTrash, FaFileExcel, FaFilePdf, FaEdit } from 'react-icons/fa';
+import EditStudentModal from '../modals/EditStudentModal';
+import { Student } from '../types/types';
+import { useAuth } from '../contexts/AuthContext';
 
 const Students = () => {
   const [students, setStudents] = useState<any[]>([]);
@@ -18,6 +20,9 @@ const Students = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' } | null>(null);
   const { showToast } = useToaster();
+  const { username, role } = useAuth();
+
+  const isSuperAdminOrAdmin = username && (role === 'superadmin' || role === 'admin');
 
   useEffect(() => {
     fetchStudents()
@@ -30,6 +35,33 @@ const Students = () => {
         setLoading(false);
       });
   }, []);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingStudentId, setEditingStudentId] = useState<string | undefined>(undefined);
+
+  const handleOpenModal = (studentId?: string) => {
+    setEditingStudentId(studentId);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setEditingStudentId(undefined);
+  };
+
+  const handleStudentUpdate = (updatedStudent: Student) => {
+    setStudents(prevStudents => {
+      if (updatedStudent._id) {
+        // If updating an existing student
+        return prevStudents.map(student => 
+          student._id === updatedStudent._id ? updatedStudent : student
+        );
+      } else {
+        // If creating a new student
+        return [...prevStudents, updatedStudent];
+      }
+    });
+  };
 
   const handleSelectStudent = (id: string) => {
     setSelectedStudents((prev) =>
@@ -122,14 +154,16 @@ const Students = () => {
     <Box p={{ base: "4", md: "5", lg: "6" }}>
       <Flex mb="4" justifyContent="space-between" alignItems="center">
         <Heading size="lg">Data Siswa</Heading>
+        {isSuperAdminOrAdmin && (
         <Flex>
-          <Button size="sm" colorScheme="blue" as={Link} to="/students/create" mr="3" leftIcon={<FaPlus />}>
+          <Button size="sm" colorScheme="blue" onClick={() => handleOpenModal()} mr="3" leftIcon={<FaPlus />}>
             Create
           </Button>
           <Button size="sm" colorScheme="red" onClick={handleDeleteMultiple} leftIcon={<FaTrash />}>
             Delete
           </Button>
         </Flex>
+        )}
       </Flex>
       <Flex mb="4" justifyContent="space-between" alignItems="center">
         <Input
@@ -181,7 +215,7 @@ const Students = () => {
                 <Td>{student.nama}</Td>
                 <Td>{student.kelas}</Td>
                 <Td>
-                  <Button as={Link} to={`/students/${student._id}/edit`} size="sm" colorScheme="blue" mr="2" leftIcon={<FaEdit />}>Edit</Button>
+                  <Button onClick={() => handleOpenModal(student._id)} size="sm" colorScheme="blue" mr="2" leftIcon={<FaEdit />}>Edit</Button>
                 </Td>
               </Tr>
             ))}
@@ -201,6 +235,12 @@ const Students = () => {
           </Button>
         ))}
       </Flex>
+      <EditStudentModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        studentId={editingStudentId}
+        onStudentUpdate={handleStudentUpdate}
+      />
     </Box>
   );
 };

@@ -16,18 +16,20 @@ import { FiHome, FiUsers, FiFileText, FiMenu, FiUpload } from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import { NavLink } from 'react-router-dom';
 import { useProfileMenu } from '../hooks/ProfileMenu';
+import { useAuth } from '../contexts/AuthContext';
 
 interface LinkItemProps {
   name: string;
   icon: IconType;
   route: string;
+  roles?: string[];
 }
 
 const LinkItems: Array<LinkItemProps> = [
   { name: 'Dashboard', icon: FiHome, route: '/dashboard' },
   { name: 'Data Siswa', icon: FiUsers, route: '/students' },
   { name: 'Data Nilai', icon: FiFileText, route: '/test-results' },
-  { name: 'Import Excel', icon: FiUpload, route: '/import' },
+  { name: 'Import Excel', icon: FiUpload, route: '/import', roles: ['superadmin', 'admin'] }
 ];
 
 export default function Sidebar({ children }: { children: ReactNode }) {
@@ -62,6 +64,8 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+  const { role } = useAuth();
+
   return (
     <Box
       bg={useColorModeValue('white', 'gray.900')}
@@ -80,11 +84,16 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         />
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
-      {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon} route={link.route} onClose={onClose}>
-          {link.name}
-        </NavItem>
-      ))}
+      {LinkItems.map((link) => {
+        if (!link.roles || (role && link.roles.includes(role))) {
+          return (
+            <NavItem key={link.name} icon={link.icon} route={link.route} onClose={onClose}>
+              {link.name}
+            </NavItem>
+          );
+        }
+        return null;
+      })}
     </Box>
   );
 };

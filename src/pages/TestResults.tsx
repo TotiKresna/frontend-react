@@ -21,6 +21,7 @@ import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx";
 import { FaPlus, FaTrash, FaFileExcel, FaFilePdf, FaEdit } from "react-icons/fa";
+import { useAuth } from '../contexts/AuthContext';
 
 const TestResults = () => {
   const [testResults, setTestResults] = useState<any[]>([]);
@@ -31,6 +32,9 @@ const TestResults = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: "ascending" | "descending" } | null>(null);
   const { showToast } = useToaster();
+  const { username, role } = useAuth();
+
+  const isSuperAdminOrAdmin = username && (role === 'superadmin' || role === 'admin');
 
   useEffect(() => {
     fetchTestResults()
@@ -159,6 +163,7 @@ const TestResults = () => {
     <Box p={{ base: "4", md: "5", lg: "6" }}>
       <Flex mb="4" justifyContent="space-between" alignItems="center">
         <Heading size="lg">Data Nilai</Heading>
+        {isSuperAdminOrAdmin && (
         <Flex>
           <Button size="sm" colorScheme="blue" as={Link} to="/test-results/create" mr="3" leftIcon={<FaPlus />}>
             Create
@@ -167,6 +172,7 @@ const TestResults = () => {
             Delete
           </Button>
         </Flex>
+        )}
       </Flex>
       <Flex mb="4" justifyContent="space-between" alignItems="center">
         <Input

@@ -1,30 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import Loader from '../components/Loader';
-import { checkAuth } from '../api/auth';
+import { useAuth } from '../contexts/AuthContext';
 
 const PrivateRoute: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const { username } = useAuth();
 
-  useEffect(() => {
-    const verifyAuth = async () => {
-      try {
-        await checkAuth();
-        setIsAuthenticated(true);
-      } catch (error) {
-        setIsAuthenticated(false);
-      }
-    };
-
-    verifyAuth();
-  }, []);
-
-  if (isAuthenticated === null) {
-    return <Loader />;
+  if (username === null) {
+    return <Navigate to="/login" />;
   }
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+  return <Outlet />;
 };
-
 
 export default PrivateRoute;
