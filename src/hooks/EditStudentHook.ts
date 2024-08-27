@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { createStudent, getStudentById, updateStudent } from '../api/students';
 import useToaster from '../components/Toaster';
 import { Student } from '../types/types';

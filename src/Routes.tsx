@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Students from "./pages/Students";
 import TestResults from "./pages/TestResults";
@@ -11,17 +11,8 @@ import Login from './components/Login';
 import Register from './components/Register';
 import PrivateRoute from './components/PrivateRoute';
 import Layout from "./components/Layout";
-import { useAuth } from './contexts/AuthContext';
 
 const AppRoutes = () => {
-  const { username, role } = useAuth();
-
-  const AdminRoute = () => {
-    if (username && (role === 'admin' || role === 'superadmin')) {
-      return <Outlet />;
-    }
-    return <Navigate to="/dashboard" replace />;
-  };
 
   return (
     <Routes>
@@ -32,16 +23,14 @@ const AppRoutes = () => {
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/students" element={<Students />} />
+          <Route path="/students/create" element={<EditStudent />} />
+          <Route path="/students/:id/edit" element={<EditStudent />} />
           <Route path="/students/:id" element={<StudentDetail />} />
           <Route path="/test-results" element={<TestResults />} />
+          <Route path="/test-results/create" element={<EditTestResult />} />
+          <Route path="/test-results/:id/edit" element={<EditTestResult />} />
           <Route path="/test-results/:id" element={<TestResultDetail />} />
           <Route path="/import" element={<ImportExcel />} />
-          <Route element={<AdminRoute />}>
-            <Route path="/students/create" element={<EditStudent />} />
-            <Route path="/students/:id/edit" element={<EditStudent />} />
-            <Route path="/test-results/create" element={<EditTestResult />} />
-            <Route path="/test-results/:id/edit" element={<EditTestResult />} />
-          </Route>
         </Route>
       </Route>
     </Routes>
