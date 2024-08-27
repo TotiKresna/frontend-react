@@ -35,12 +35,12 @@ const AppRoutes = () => {
           <Route path="/students/:id" element={<StudentDetail />} />
           <Route path="/test-results" element={<TestResults />} />
           <Route path="/test-results/:id" element={<TestResultDetail />} />
+          <Route path="/import" element={<ImportExcel />} />
           <Route element={<AdminRoute />}>
             <Route path="/students/create" element={<EditStudent />} />
             <Route path="/students/:id/edit" element={<EditStudent />} />
             <Route path="/test-results/create" element={<EditTestResult />} />
             <Route path="/test-results/:id/edit" element={<EditTestResult />} />
-            <Route path="/import" element={<ImportExcel />} />
           </Route>
         </Route>
       </Route>
