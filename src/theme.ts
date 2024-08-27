@@ -22,7 +22,7 @@ const theme = extendTheme({
   },
   fonts: {
     heading: '"Poppins", sans-serif',
-    body: '"Open Sans", sans-serif',
+    body: '"Inter", sans-serif',
   },
   fontWeight: {
     body: '500'

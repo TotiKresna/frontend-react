@@ -11,6 +11,7 @@ import {
   Flex,
   Heading,
   Input,
+  Spacer,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -20,7 +21,7 @@ import useToaster from "../components/Toaster";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx";
-import { FaPlus, FaTrash, FaFileExcel, FaFilePdf, FaEdit } from "react-icons/fa";
+import { FaPlus, FaTrash, FaFileExcel, FaFilePdf, FaEdit, FaSync } from "react-icons/fa";
 
 const TestResults = () => {
   const [testResults, setTestResults] = useState<any[]>([]);
@@ -130,6 +131,27 @@ const TestResults = () => {
     setSortConfig({ key, direction });
   };
 
+  const handleRefresh = () => {
+    setLoading(true);
+    fetchTestResults()
+      .then((response) => {
+        const uniqueResults = response.data.reduce((acc: any[], current: any) => {
+          const x = acc.find(item => item.student_id._id === current.student_id._id);
+          if (!x) {
+            return acc.concat([current]);
+          } else {
+            return acc;
+          }
+        }, []);
+        setTestResults(uniqueResults);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoading(false);
+      });
+  };
+
   const sortedResults = [...testResults].sort((a, b) => {
     if (sortConfig !== null) {
       if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -162,8 +184,12 @@ const TestResults = () => {
 
   return (
     <Box p={{ base: "4", md: "5", lg: "6" }}>
-      <Flex mb="4" justifyContent="space-between" alignItems="center">
+      <Flex mb="4"  alignItems="center">
         <Heading size="lg">Data Nilai</Heading>
+          <Button ml="3" borderRadius="10" size="xs" colorScheme="teal" onClick={handleRefresh} >
+          <FaSync />
+          </Button>
+          <Spacer />
         {isSuperAdminOrAdmin && (
         <Flex>
           <Button size="sm" colorScheme="blue" as={Link} to="/test-results/create" mr="3" leftIcon={<FaPlus />}>

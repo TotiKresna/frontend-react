@@ -91,7 +91,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       {LinkItems.map((link) => {
         if (!link.roles || ( link.roles.includes(userRole))) {
           return (
-            <NavItem key={link.name} icon={link.icon} route={link.route} onClose={onClose}>
+            <NavItem fontWeight="550" key={link.name} icon={link.icon} route={link.route} onClose={onClose}>
               {link.name}
             </NavItem>
           );
