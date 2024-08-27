@@ -21,7 +21,6 @@ import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx";
 import { FaPlus, FaTrash, FaFileExcel, FaFilePdf, FaEdit } from "react-icons/fa";
-import { useAuth } from '../contexts/AuthContext';
 
 const TestResults = () => {
   const [testResults, setTestResults] = useState<any[]>([]);
@@ -32,9 +31,9 @@ const TestResults = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: "ascending" | "descending" } | null>(null);
   const { showToast } = useToaster();
-  const { username, role } = useAuth();
+  const [userRole, setUserRole] = useState('');
 
-  const isSuperAdminOrAdmin = username && (role === 'superadmin' || role === 'admin');
+  const isSuperAdminOrAdmin = (userRole === 'superadmin' || userRole === 'admin');
 
   useEffect(() => {
     fetchTestResults()
@@ -54,6 +53,8 @@ const TestResults = () => {
         console.error(error);
         setLoading(false);
       });
+      const storedUserRole = localStorage.getItem('role');
+      if (storedUserRole) setUserRole(storedUserRole);
   }, []);
 
   const handleSelectResult = (id: string) => {
@@ -195,6 +196,7 @@ const TestResults = () => {
         <Table variant="simple" mt="5" size="sm">
           <Thead>
             <Tr>
+            {isSuperAdminOrAdmin && (
               <Th>
                 <Checkbox
                   colorScheme='green'
@@ -206,6 +208,7 @@ const TestResults = () => {
                   }
                 />
               </Th>
+            )}
               <Th onClick={() => handleSort("no")}>No</Th>
               <Th onClick={() => handleSort("nama")}>Nama Siswa</Th>
               <Th onClick={() => handleSort("kelas")}>Kelas</Th>
@@ -214,12 +217,13 @@ const TestResults = () => {
               <Th onClick={() => handleSort("opm_kali")}>OPM Kali</Th>
               <Th onClick={() => handleSort("opm_bagi")}>OPM Bagi</Th>
               <Th onClick={() => handleSort("opm_total")}>OPM Total</Th>
-              <Th>Actions</Th>
+              {isSuperAdminOrAdmin && (<Th>Actions</Th>)}
             </Tr>
           </Thead>
           <Tbody>
             {currentResults.map((result, index) => (
               <Tr key={result._id}>
+                {isSuperAdminOrAdmin && (
                 <Td>
                   <Checkbox
                     colorScheme='red'
@@ -227,6 +231,7 @@ const TestResults = () => {
                     onChange={() => handleSelectResult(result._id)}
                   />
                 </Td>
+                )}
                 <Td>{indexOfFirstResult + index + 1}</Td>
                 <Td>
                   <a
@@ -243,6 +248,7 @@ const TestResults = () => {
                 <Td>{result.opm_kali}</Td>
                 <Td>{result.opm_bagi}</Td>
                 <Td>{result.opm_total}</Td>
+                {isSuperAdminOrAdmin && (
                 <Td>
                   <Button
                     as={Link}
@@ -255,6 +261,7 @@ const TestResults = () => {
                     Edit
                   </Button>
                 </Td>
+                )}
               </Tr>
             ))}
           </Tbody>

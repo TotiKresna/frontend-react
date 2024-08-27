@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState, useEffect  } from 'react';
 import {
   IconButton,
   Box,
@@ -16,7 +16,6 @@ import { FiHome, FiUsers, FiFileText, FiMenu, FiUpload } from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import { NavLink } from 'react-router-dom';
 import { useProfileMenu } from '../hooks/ProfileMenu';
-import { useAuth } from '../contexts/AuthContext';
 
 interface LinkItemProps {
   name: string;
@@ -64,7 +63,12 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
-  const { role } = useAuth();
+  const [userRole, setUserRole] = useState('');
+
+  useEffect(() => {
+    const storedUserRole = localStorage.getItem('role');
+    if (storedUserRole) setUserRole(storedUserRole);
+  }, []);
 
   return (
     <Box
@@ -85,14 +89,14 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => {
-        if (!link.roles || (role && link.roles.includes(role))) {
+        if (!link.roles || ( link.roles.includes(userRole))) {
           return (
             <NavItem key={link.name} icon={link.icon} route={link.route} onClose={onClose}>
               {link.name}
             </NavItem>
           );
         }
-        return null;
+        return(null)
       })}
     </Box>
   );

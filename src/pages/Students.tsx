@@ -9,7 +9,6 @@ import * as XLSX from 'xlsx';
 import { FaPlus, FaTrash, FaFileExcel, FaFilePdf, FaEdit } from 'react-icons/fa';
 import EditStudentModal from '../modals/EditStudentModal';
 import { Student } from '../types/types';
-import { useAuth } from '../contexts/AuthContext';
 
 const Students = () => {
   const [students, setStudents] = useState<any[]>([]);
@@ -20,9 +19,9 @@ const Students = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' } | null>(null);
   const { showToast } = useToaster();
-  const { username, role } = useAuth();
+  const [userRole, setUserRole] = useState('');
 
-  const isSuperAdminOrAdmin = username && (role === 'superadmin' || role === 'admin');
+  const isSuperAdminOrAdmin = (userRole === 'superadmin' || userRole === 'admin');
 
   useEffect(() => {
     fetchStudents()
@@ -34,6 +33,8 @@ const Students = () => {
         console.error(error);
         setLoading(false);
       });
+      const storedUserRole = localStorage.getItem('role');
+      if (storedUserRole) setUserRole(storedUserRole);
   }, []);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -186,6 +187,7 @@ const Students = () => {
         <Table variant="simple" mt="5" size="sm">
           <Thead>
             <Tr>
+            {isSuperAdminOrAdmin && (
               <Th>
                 <Checkbox 
                   colorScheme='green'
@@ -195,15 +197,17 @@ const Students = () => {
                   }
                 />
               </Th>
+              )}
               <Th onClick={() => handleSort('no')}>No</Th>
               <Th onClick={() => handleSort('nama')}>Nama</Th>
               <Th onClick={() => handleSort('kelas')}>Kelas</Th>
-              <Th>Actions</Th>
+              {isSuperAdminOrAdmin && (<Th>Actions</Th>)}
             </Tr>
           </Thead>
           <Tbody>
             {currentStudents.map((student, index) => (
               <Tr key={student._id}>
+                {isSuperAdminOrAdmin && (
                 <Td>
                   <Checkbox
                     colorScheme='red'
@@ -211,12 +215,15 @@ const Students = () => {
                     onChange={() => handleSelectStudent(student._id.toString())}
                   />
                 </Td>
+                )}
                 <Td>{indexOfFirstStudent + index + 1}</Td>
                 <Td>{student.nama}</Td>
                 <Td>{student.kelas}</Td>
+                {isSuperAdminOrAdmin && (
                 <Td>
                   <Button onClick={() => handleOpenModal(student._id)} size="sm" colorScheme="blue" mr="2" leftIcon={<FaEdit />}>Edit</Button>
                 </Td>
+                )}
               </Tr>
             ))}
           </Tbody>
