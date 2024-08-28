@@ -8,7 +8,7 @@ const useToaster = () => {
       title,
       description,
       status,
-      duration: 5000,
+      duration: 3000,
       isClosable: true,
     });
   };

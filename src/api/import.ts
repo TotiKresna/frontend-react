@@ -13,3 +13,8 @@ export const importExcel = async (file: File) => {
     }
   });
 };
+
+export const getImportProgress = async () => {
+  const response = await axios.get(`${BASE_URL}/api/import/progress`);
+  return response.data;
+};

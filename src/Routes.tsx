@@ -11,6 +11,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import PrivateRoute from './components/PrivateRoute';
 import Layout from "./components/Layout";
+import { ImportProgressProvider } from "./contexts/ImportProgressContext"
 
 const AppRoutes = () => {
 
@@ -30,7 +31,11 @@ const AppRoutes = () => {
           <Route path="/test-results/create" element={<EditTestResult />} />
           <Route path="/test-results/:id/edit" element={<EditTestResult />} />
           <Route path="/test-results/:id" element={<TestResultDetail />} />
-          <Route path="/import" element={<ImportExcel />} />
+          <Route path="/import" element={
+            <ImportProgressProvider>
+              <ImportExcel />
+            </ImportProgressProvider>
+          } />
         </Route>
       </Route>
     </Routes>
