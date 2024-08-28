@@ -17,6 +17,7 @@ import {
   InputLeftElement,
   IconButton,
   Avatar,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { FaUser, FaLock } from 'react-icons/fa';
@@ -77,7 +78,7 @@ export default function Login() {
         borderRadius={4}
         textAlign="center"
         boxShadow="lg"
-        bg="whiteAlpha.900"
+        bg={useColorModeValue('whiteAlpha.800', 'gray.900')}
       >
         <Avatar mt="4" bg="teal.500" />
         <Heading color="teal.400">Welcome</Heading>
