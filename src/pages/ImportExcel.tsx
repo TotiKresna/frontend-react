@@ -66,21 +66,21 @@ const ImportExcel = () => {
     }
   };
 
-  // if (loading) {
-  //   return <Loader />;
-  // }
+  useEffect(() => {
+  if (status === "processing") {
+    setActiveStep(3); // Processing
+  } else if (status === "completed") {
+    setActiveStep(4); // Complete
+    stopPolling();
+    showToast("Success", "File imported successfully.", "success");
+    navigate('/test-results');
+  }
+}, [status, stopPolling, navigate, showToast, setActiveStep]);
 
-    useEffect(() => {
-    if (status === "completed") {
-      setActiveStep(4); // Complete
-      stopPolling();
-      showToast("Success", "File imported successfully.", "success");
-      navigate('/test-results');
-    } else if (status === "processing") {
-      showToast("Info", "File processing.", "info");
-      setActiveStep(3); // Processing
-    }
-  }, [status, stopPolling, navigate, showToast, setActiveStep]);
+  if (loading) {
+    return <Loader />;
+  }
+
 
   return (
     <Box p="5">

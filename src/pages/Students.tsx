@@ -1,4 +1,4 @@
-import { Box, Button, Table, Thead, Tbody, Tr, Th, Td, Checkbox, Flex, Heading, Input } from '@chakra-ui/react';
+import { Box, Button, Table, Thead, Tbody, Tr, Th, Td, Checkbox, Flex, Heading, Input, Spacer } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { fetchStudents, deleteMultipleStudents } from '../api/students';
 import Loader from '../components/Loader';
@@ -6,7 +6,7 @@ import useToaster from '../components/Toaster';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
-import { FaPlus, FaTrash, FaFileExcel, FaFilePdf, FaEdit } from 'react-icons/fa';
+import { FaPlus, FaTrash, FaFileExcel, FaFilePdf, FaEdit, FaSync } from 'react-icons/fa';
 import EditStudentModal from '../modals/EditStudentModal';
 import { Student } from '../types/types';
 
@@ -121,6 +121,19 @@ const Students = () => {
     setSortConfig({ key, direction });
   };
 
+  const handleRefresh = () => {
+    setLoading(true);
+    fetchStudents()
+      .then((response) => {
+        setStudents(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoading(false);
+      });
+  };
+
   const sortedStudents = [...students].sort((a, b) => {
     if (sortConfig !== null) {
       if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -153,8 +166,12 @@ const Students = () => {
 
   return (
     <Box p={{ base: "4", md: "5", lg: "6" }}>
-      <Flex mb="4" justifyContent="space-between" alignItems="center">
+      <Flex mb="4" alignItems="center">
         <Heading size="lg">Data Siswa</Heading>
+        <Button ml="3" borderRadius="10" size="xs" colorScheme="teal" onClick={handleRefresh} >
+          <FaSync />
+          </Button>
+          <Spacer />
         {isSuperAdminOrAdmin && (
         <Flex>
           <Button size="sm" colorScheme="blue" onClick={() => handleOpenModal()} mr="3" leftIcon={<FaPlus />}>
