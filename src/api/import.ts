@@ -1,13 +1,12 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://backend-api-rosy.vercel.app';
-// const BASE_URL = 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL;
 
 export const importExcel = async (file: File) => {
   const formData = new FormData();
   formData.append('file', file);
 
-  return axios.post(`${BASE_URL}/api/import`, formData, {
+  return axios.post(`${API_URL}/api/import`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
@@ -15,6 +14,6 @@ export const importExcel = async (file: File) => {
 };
 
 export const getImportProgress = async () => {
-  const response = await axios.get(`${BASE_URL}/api/import/progress`);
+  const response = await axios.get(`${API_URL}/api/import/progress`);
   return response.data;
 };

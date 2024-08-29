@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://backend-api-rosy.vercel.app';
-// const API_URL = 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL;
 
 axios.defaults.withCredentials = true;
 
