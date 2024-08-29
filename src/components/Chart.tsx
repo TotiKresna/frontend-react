@@ -39,7 +39,7 @@ const OpmHistogramChart: React.FC = () => {
       const results: TestResult[] = response.data;
       const data: Record<string, HistogramData[]> = {};
 
-      const opmFields: (keyof TestResult)[] = ['opm_tambah', 'opm_kurang', 'opm_kali', 'opm_bagi', 'opm_total'];
+      const opmFields: (keyof TestResult)[] = ['opm_tambah', 'opm_kurang', 'opm_kali', 'opm_bagi'];
 
       opmFields.forEach((field) => {
         data[field] = scoreRanges.map((range) => ({
