@@ -5,7 +5,7 @@ import {
   useColorModeValue,
   useBreakpointValue,
 } from '@chakra-ui/react';
-import { useProfileMenu } from '../hooks/ProfileMenu';
+import { useProfileMenu } from './ProfileMenu';
 
 export default function Header() {
   const { ProfileMenu } = useProfileMenu();

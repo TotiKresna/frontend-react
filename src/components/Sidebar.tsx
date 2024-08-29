@@ -15,7 +15,7 @@ import {
 import { FiHome, FiUsers, FiFileText, FiMenu, FiUpload } from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import { NavLink } from 'react-router-dom';
-import { useProfileMenu } from '../hooks/ProfileMenu';
+import { useProfileMenu } from './ProfileMenu';
 
 interface LinkItemProps {
   name: string;
