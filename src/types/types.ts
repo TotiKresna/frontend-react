@@ -4,6 +4,8 @@ export interface Student {
     kelas: string;
   }
 
+  export type StudentSortKeys = 'nama' | 'kelas';
+
 export interface TestResult {
     _id?: string;
     student_id?: {

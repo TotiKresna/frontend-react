@@ -14,11 +14,13 @@ const SocialButton = ({
   children,
   label,
   href,
+  target,
 
 }: {
   children: ReactNode;
   label: string;
   href: string;
+  target?: string;
 
 }) => {
   return (
@@ -30,6 +32,7 @@ const SocialButton = ({
       cursor={'pointer'}
       as={'a'}
       href={href}
+      target={target} rel="noopener noreferrer"
       display={'inline-flex'}
       alignItems={'center'}
       justifyContent={'center'}
@@ -64,7 +67,7 @@ export default function Footer() {
           <SocialButton label={'YouTube'} href={'#'}>
             <FaYoutube />
           </SocialButton>
-          <SocialButton label={'Instagram'} href={'https://instagram.com/toti.k.w'}>
+          <SocialButton label={'Instagram'} href={'https://instagram.com/toti.k.w'} target="_blank">
             <FaInstagram />
           </SocialButton>
         </Stack>
