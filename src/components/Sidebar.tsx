@@ -43,9 +43,9 @@ export default function Sidebar({ children }: { children: ReactNode }) {
         onClose={onClose}
         returnFocusOnClose={false}
         onOverlayClick={onClose}
-        size="full"
+        size="xs"
       >
-        <DrawerContent>
+        <DrawerContent maxW="250px">
           <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
@@ -165,6 +165,9 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       borderBottomWidth="1px"
       borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
       justifyContent="space-between"
+      position="sticky"
+      top={0}
+      zIndex={1000}
       {...rest}
     >
       <IconButton variant="outline" onClick={onOpen} aria-label="open menu" icon={<FiMenu />} />

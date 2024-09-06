@@ -10,12 +10,21 @@ import { useProfileMenu } from './ProfileMenu';
 export default function Header() {
   const { ProfileMenu } = useProfileMenu();
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const bgColor = useColorModeValue('gray.100', 'gray.900');
+
+    // Jika dalam mode mobile, tidak render apapun
+    if (isMobile) {
+      return null;
+    }
 
   return (
-    <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+    <Box 
+      bg={bgColor} 
+      px={4}
+      >
       <Flex h={16} alignItems={'center'} justifyContent={'flex-end'}>
         <Flex alignItems={'center'}>
-          {!isMobile && <ProfileMenu />}
+        <ProfileMenu />
         </Flex>
       </Flex>
     </Box>
