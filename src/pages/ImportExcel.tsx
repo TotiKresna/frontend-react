@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import useToaster from "../components/Toaster";
 import Loader from "../components/Loader";
 import { importExcel } from "../api/import";
-import { useImportProgress } from '../hooks/ImportProgress';
+import { useImportProgress } from '../hooks/ImportProgressHook';
 
 const steps = [
   { title: 'First', description: 'Select File' },

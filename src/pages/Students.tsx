@@ -9,6 +9,7 @@ import * as XLSX from 'xlsx';
 import { FaPlus, FaTrash, FaFileExcel, FaFilePdf, FaEdit, FaSync } from 'react-icons/fa';
 import EditStudentModal from '../modals/EditStudentModal';
 import { Student } from '../types/types';
+import { WarningAlert, DeleteConfirmationAlert } from '../components/SweetAlert';
 
 const Students = () => {
   const [students, setStudents] = useState<any[]>([]);
@@ -71,16 +72,25 @@ const Students = () => {
   };
 
   const handleDeleteMultiple = () => {
-    deleteMultipleStudents(selectedStudents)
-      .then(() => {
-        setStudents((prev) => prev.filter((student) => !selectedStudents.includes(student._id)));
-        setSelectedStudents([]);
-        showToast('Success', 'Selected students deleted successfully', 'success');
-      })
-      .catch((error) => {
-        console.error(error);
-        showToast('Error', 'Failed to delete selected students', 'error');
+    if (selectedStudents.length === 0) {
+      WarningAlert({ text: 'Anda belum memilih data' });
+    } else {
+      DeleteConfirmationAlert({
+        onConfirm: () => {
+          deleteMultipleStudents(selectedStudents)
+            .then(() => {
+              setStudents((prev) => prev.filter((student) => !selectedStudents.includes(student._id)));
+              setSelectedStudents([]);
+              showToast('Success', 'Selected students deleted successfully', 'success');
+            })
+            .catch((error) => {
+              console.error(error);
+              showToast('Error', 'Failed to delete selected students', 'error');
+            });
+        },
+        itemName: `${selectedStudents.length} student${selectedStudents.length > 1 ? 's' : ''}`
       });
+    }
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {

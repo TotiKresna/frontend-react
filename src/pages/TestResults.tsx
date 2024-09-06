@@ -22,6 +22,7 @@ import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx";
 import { FaPlus, FaTrash, FaFileExcel, FaFilePdf, FaEdit, FaSync } from "react-icons/fa";
+import { WarningAlert, DeleteConfirmationAlert } from '../components/SweetAlert';
 
 const TestResults = () => {
   const [testResults, setTestResults] = useState<any[]>([]);
@@ -65,22 +66,31 @@ const TestResults = () => {
   };
 
   const handleDeleteMultiple = () => {
-    deleteMultipleTestResults(selectedResults)
-      .then(() => {
-        setTestResults((prev) =>
-          prev.filter((result) => !selectedResults.includes(result._id))
-        );
-        setSelectedResults([]);
-        showToast(
-          "Success",
-          "Selected test results deleted successfully",
-          "success"
-        );
-      })
-      .catch((error) => {
-        console.error(error);
-        showToast("Error", "Failed to delete selected test results", "error");
+    if (selectedResults.length === 0) {
+      WarningAlert({ text: 'Anda belum memilih data' });
+    } else {
+      DeleteConfirmationAlert({
+        onConfirm: () => {
+          deleteMultipleTestResults(selectedResults)
+            .then(() => {
+              setTestResults((prev) =>
+                prev.filter((result) => !selectedResults.includes(result._id))
+              );
+              setSelectedResults([]);
+              showToast(
+                "Success",
+                "Selected test results deleted successfully",
+                "success"
+              );
+            })
+            .catch((error) => {
+              console.error(error);
+              showToast("Error", "Failed to delete selected test results", "error");
+            });
+        },
+        itemName: `${selectedResults.length} student${selectedResults.length > 1 ? 's' : ''}`
       });
+    }
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -260,13 +270,13 @@ const TestResults = () => {
                 )}
                 <Td>{indexOfFirstResult + index + 1}</Td>
                 <Td>
-                  <a
+                  {/* <a
                     href={`/test-results/${result.student_id._id}/details`}
                     target="_blank"
                     rel="noopener noreferrer"
-                  >
+                  > */}
                     {result.student_id.nama}
-                  </a>
+                  {/* </a> */}
                 </Td>
                 <Td>{result.student_id.kelas}</Td>
                 <Td>{result.opm_tambah}</Td>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Box, Heading, SimpleGrid, Text, Stat, StatLabel, StatNumber, useColorModeValue } from '@chakra-ui/react';
+import { Box, Heading, SimpleGrid, Text, useColorModeValue } from '@chakra-ui/react';
 import { fetchTestResults } from '../api/testResults';
 
 interface TestResult {
