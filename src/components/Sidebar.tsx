@@ -28,7 +28,7 @@ const LinkItems: Array<LinkItemProps> = [
   { name: 'Dashboard', icon: FiHome, route: '/dashboard' },
   { name: 'Data Siswa', icon: FiUsers, route: '/students' },
   { name: 'Data Nilai', icon: FiFileText, route: '/test-results' },
-  { name: 'Import Excel', icon: FiUpload, route: '/import', roles: ['superadmin', 'admin'] }
+  { name: 'Import Nilai', icon: FiUpload, route: '/import', roles: ['superadmin', 'admin'] }
 ];
 
 export default function Sidebar({ children }: { children: ReactNode }) {

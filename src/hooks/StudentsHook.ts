@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 import { fetchStudents, deleteMultipleStudents } from '../api/students';
 import useToaster from '../components/Toaster';
-import { Student, StudentSortKeys  } from '../types/types';
+import { Student, StudentSortKeys } from '../types/types';
 import { WarningAlert, DeleteConfirmationAlert } from '../components/SweetAlert';
 
 const useStudents = () => {
-  const [students, setStudents] = useState<Student[]>([]);
+  const [allStudents, setAllStudents] = useState<Student[]>([]);
   const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [studentsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortConfig, setSortConfig] = useState<{ key: StudentSortKeys, direction: 'ascending' | 'descending' } | null>(null);
+  const [sortConfig, setSortConfig] = useState<{ key: StudentSortKeys; direction: 'ascending' | 'descending' } | null>(null);
   const { showToast } = useToaster();
   const [userRole, setUserRole] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,7 +20,7 @@ const useStudents = () => {
   useEffect(() => {
     fetchStudents()
       .then((response) => {
-        setStudents(response.data);
+        setAllStudents(response.data);
         setLoading(false);
       })
       .catch((error) => {
@@ -42,7 +42,7 @@ const useStudents = () => {
   };
 
   const handleStudentUpdate = (updatedStudent: Student) => {
-    setStudents(prevStudents => {
+    setAllStudents(prevStudents => {
       if (updatedStudent._id) {
         return prevStudents.map(student => 
           student._id === updatedStudent._id ? updatedStudent : student
@@ -51,6 +51,15 @@ const useStudents = () => {
         return [...prevStudents, updatedStudent];
       }
     });
+  };
+
+  const handleSelectAllStudents = (isSelected: boolean) => {
+    if (isSelected) {
+      const allStudentIds = allStudents.map(student => student._id).filter((id): id is string => id !== undefined);
+      setSelectedStudents(allStudentIds);
+    } else {
+      setSelectedStudents([]);
+    }
   };
 
   const handleSelectStudent = (id: string) => {
@@ -67,7 +76,7 @@ const useStudents = () => {
         onConfirm: () => {
           deleteMultipleStudents(selectedStudents)
             .then(() => {
-              setStudents((prev) => prev.filter((student) => student._id && !selectedStudents.includes(student._id)));
+              setAllStudents((prev) => prev.filter((student) => student._id && !selectedStudents.includes(student._id)));
               setSelectedStudents([]);
               showToast('Success', 'Selected students deleted successfully', 'success');
             })
@@ -97,7 +106,7 @@ const useStudents = () => {
     setLoading(true);
     fetchStudents()
       .then((response) => {
-        setStudents(response.data);
+        setAllStudents(response.data);
         setLoading(false);
       })
       .catch((error) => {
@@ -106,12 +115,13 @@ const useStudents = () => {
       });
   };
 
-  const sortedStudents = [...students].sort((a, b) => {
+  const sortedStudents = [...allStudents].sort((a, b) => {
     if (sortConfig !== null) {
-      if (a[sortConfig.key] < b[sortConfig.key]) {
+      const { key } = sortConfig;
+      if (a[key] < b[key]) {
         return sortConfig.direction === 'ascending' ? -1 : 1;
       }
-      if (a[sortConfig.key] > b[sortConfig.key]) {
+      if (a[key] > b[key]) {
         return sortConfig.direction === 'ascending' ? 1 : -1;
       }
     }
@@ -133,7 +143,8 @@ const useStudents = () => {
   };
 
   return {
-    students: currentStudents,
+    allStudents,
+    currentStudents,
     loading,
     selectedStudents,
     searchTerm,
@@ -150,6 +161,7 @@ const useStudents = () => {
     handleSearch,
     handlePageChange,
     handleSelectStudent,
+    handleSelectAllStudents,
     handleSort,
   };
 };

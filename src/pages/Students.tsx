@@ -10,7 +10,8 @@ import Loader from '../components/Loader';
 
 const Students: React.FC = () => {
   const {
-    students,
+    allStudents,
+    currentStudents,
     loading,
     selectedStudents,
     searchTerm,
@@ -27,6 +28,7 @@ const Students: React.FC = () => {
     handleSearch,
     handlePageChange,
     handleSelectStudent,
+    handleSelectAllStudents,
     handleSort,
   } = useStudents();
 
@@ -62,20 +64,22 @@ const Students: React.FC = () => {
           mr="4"
         />
         <Flex>
-          <Button size="sm" colorScheme="green" onClick={() => exportToExcel(students)} mr="3" leftIcon={<FaFileExcel />}>
+          <Button size="sm" colorScheme="green" onClick={() => exportToExcel(allStudents)} mr="3" leftIcon={<FaFileExcel />}>
             Export Excel
           </Button>
-          <Button size="sm" colorScheme="red" onClick={() => exportToPDF(students)} leftIcon={<FaFilePdf />}>
+          <Button size="sm" colorScheme="red" onClick={() => exportToPDF(allStudents)} leftIcon={<FaFilePdf />}>
             Export PDF
           </Button>
         </Flex>
       </Flex>
       <StudentTable 
-        students={students}
+        currentStudents={currentStudents}
+        allStudents={allStudents}
         selectedStudents={selectedStudents}
         isSuperAdminOrAdmin={isSuperAdminOrAdmin}
         onOpenModal={handleOpenModal}
         onSelectStudent={handleSelectStudent}
+        onSelectAllStudents={handleSelectAllStudents}
         onSort={handleSort}
       />
       <Pagination 

@@ -87,19 +87,19 @@ const ImportExcel = () => {
       <VStack spacing={4} align="stretch">
         <form onSubmit={handleSubmit}>
           <Input type="file" accept=".xlsx, .xls" onChange={handleFileChange} mb="3" />
-          <Button type="submit" colorScheme="blue" isDisabled={activeStep > 0}>
+          <Button size="sm" type="submit" colorScheme="blue" isDisabled={activeStep > 0}>
             Import Excel
           </Button>
         </form>
 
-        <Stepper index={activeStep}>
+        <Stepper colorScheme='blue' color='teal.400' index={activeStep}>
           {steps.map((step, index) => (
             <Step key={index}>
               <StepIndicator>
                 <StepStatus
-                  complete={<StepIndicator />}
-                  incomplete={<StepIndicator />}
-                  active={<StepIndicator />}
+                  complete={`🥳`}
+                  incomplete={`😅`}
+                  active={`📌`}
                 />
               </StepIndicator>
 
