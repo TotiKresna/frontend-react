@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { FiHome, FiUsers, FiFileText, FiMenu, FiUpload } from 'react-icons/fi';
 import { IconType } from 'react-icons';
-import { NavLink } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useProfileMenu } from './ProfileMenu';
 
 interface LinkItemProps {
@@ -33,9 +33,15 @@ const LinkItems: Array<LinkItemProps> = [
 
 export default function Sidebar({ children }: { children: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const refreshContent = () => {
+    setRefreshKey(prevKey => prevKey + 1);
+  };
+
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
-      <SidebarContent onClose={onClose} display={{ base: 'none', md: 'block' }} />
+      <SidebarContent onClose={onClose}  refreshContent={refreshContent} display={{ base: 'none', md: 'block' }} />
       <Drawer
         autoFocus={false}
         isOpen={isOpen}
@@ -46,13 +52,17 @@ export default function Sidebar({ children }: { children: ReactNode }) {
         size="xs"
       >
         <DrawerContent maxW="250px">
-          <SidebarContent onClose={onClose} />
+          <SidebarContent onClose={onClose} refreshContent={refreshContent} />
         </DrawerContent>
       </Drawer>
       {/* Mobile nav */}
       <MobileNav display={{ base: 'flex', md: 'none' }} onOpen={onOpen} />
       <Box ml={{ base: 0, md: 60 }} p="4">
-        {children}
+      {React.Children.map(children, child =>
+          React.isValidElement(child)
+            ? React.cloneElement(child, { key: refreshKey })
+            : child
+      )}
       </Box>
     </Box>
   );
@@ -60,9 +70,10 @@ export default function Sidebar({ children }: { children: ReactNode }) {
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
+  refreshContent: () => void;
 }
 
-const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+const SidebarContent = ({ onClose, refreshContent, ...rest }: SidebarProps) => {
   const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
@@ -91,7 +102,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       {LinkItems.map((link) => {
         if (!link.roles || ( link.roles.includes(userRole))) {
           return (
-            <NavItem fontWeight="550" key={link.name} icon={link.icon} route={link.route} onClose={onClose}>
+            <NavItem fontWeight="550" key={link.name} icon={link.icon} route={link.route} onClose={onClose}  refreshContent={refreshContent}>
               {link.name}
             </NavItem>
           );
@@ -107,16 +118,26 @@ interface NavItemProps extends FlexProps {
   route: string;
   children: React.ReactNode;
   onClose: () => void;
+  refreshContent: () => void;
 }
 
-const NavItem = ({ icon, route, children, onClose, ...rest }: NavItemProps) => {
+const NavItem = ({ icon, route, children, onClose, refreshContent, ...rest }: NavItemProps) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isActive = location.pathname === route;
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isActive) {
+      refreshContent();
+    } else {
+      navigate(route);
+    }
+    onClose();
+  };
+
   return (
-    <NavLink
-      to={route}
-      style={{ textDecoration: 'none', width: '100%' }}
-      onClick={onClose}
-    >
-      {({ isActive }) => (
+
         <Flex
           align="center"
           p="4"
@@ -125,6 +146,7 @@ const NavItem = ({ icon, route, children, onClose, ...rest }: NavItemProps) => {
           role="group"
           cursor="pointer"
           color={isActive ? 'teal.400' : 'gray.500'}
+          onClick={handleClick}
           _hover={{
             bg: 'transparent',
             color: 'gray.400',
@@ -143,8 +165,7 @@ const NavItem = ({ icon, route, children, onClose, ...rest }: NavItemProps) => {
           )}
           {children}
         </Flex>
-      )}
-    </NavLink>
+
   );
 };
 

@@ -40,16 +40,16 @@ const Students: React.FC = () => {
     <Box p={{ base: "4", md: "5", lg: "6" }}>
       <Flex mb="4" alignItems="center">
         <Heading size="lg">Data Siswa</Heading>
-        <Button ml="3" borderRadius="10" size="xs" colorScheme="teal" onClick={handleRefresh}>
+        <Button aria-label="Sync" ml="3" borderRadius="10" size="xs" colorScheme="teal" onClick={handleRefresh}>
           <FaSync />
         </Button>
         <Spacer />
         {isSuperAdminOrAdmin && (
           <Flex>
-            <Button size="sm" colorScheme="blue" onClick={() => handleOpenModal()} mr="3" leftIcon={<FaPlus />}>
+            <Button aria-label="create-student" size="sm" colorScheme="blue" onClick={() => handleOpenModal()} mr="3" leftIcon={<FaPlus />}>
               Create
             </Button>
-            <Button size="sm" colorScheme="red" onClick={handleDeleteMultiple} leftIcon={<FaTrash />}>
+            <Button aria-label="delete-student" size="sm" colorScheme="red" onClick={handleDeleteMultiple} leftIcon={<FaTrash />}>
               Delete
             </Button>
           </Flex>

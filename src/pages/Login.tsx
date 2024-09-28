@@ -8,7 +8,6 @@ import {
   VStack, 
   Box, 
   Heading, 
-  useToast, 
   Text, 
   Link,
   Flex,
@@ -21,6 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { FaUser, FaLock } from 'react-icons/fa';
+import useToaster from "../components/Toaster";
 import { login, setAuthToken } from '../api/auth';
 
 export default function Login() {
@@ -29,7 +29,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const toast = useToast();
+  const { showToast } = useToaster();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,22 +39,11 @@ export default function Login() {
       setAuthToken(token);
       localStorage.setItem('username', username);
       localStorage.setItem('role', role);
-      toast({
-        title: "Login berhasil",
-        status: "success",
-        duration: 2000,
-        isClosable: true,
-      });
+      showToast("Login berhasil", `Anda login sebagai ${role}`, "success");
       navigate('/dashboard');
     } catch (error) {
       console.error('Login failed:', error);
-      toast({
-        title: "Login gagal",
-        description: "Username atau password salah",
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-      });
+      showToast("Login gagal", "Username atau password salah", "error");
     } finally {
       setIsLoading(false);
     }

@@ -53,14 +53,14 @@ const ImportExcel = () => {
 
     try {
       const response = await importExcel(file);
-      showToast("Success", response.data.success, "success");
+      showToast("Info", response.data.info, "info");
       setActiveStep(2); // Upload successful
       startPolling();
       // navigate("/test-results");
     } catch (error) {
       console.log(error)
       setActiveStep(0);
-      showToast("Error", "Failed to import file.", "error");
+      // showToast("Error", "Failed to import file.", "error");
     } finally {
       setLoading(false); // Set loading to false after the upload is done
     }
@@ -69,10 +69,16 @@ const ImportExcel = () => {
   useEffect(() => {
   if (status === "processing") {
     setActiveStep(3); // Processing
-  } else if (status === "completed") {
+    showToast("Tunggu", "File sedang diproses.", "info");
+  } 
+    else if (status === "failed"){
+    stopPolling();
+    showToast("Error", "File gagal diproses.", "error");
+  }
+    else if (status === "completed") {
     setActiveStep(4); // Complete
     stopPolling();
-    showToast("Success", "File imported successfully.", "success");
+    showToast("File Berhasil Diproses", "Proses berdasarkan antrian.", "success");
     navigate('/test-results');
   }
 }, [status, stopPolling, navigate, showToast, setActiveStep]);

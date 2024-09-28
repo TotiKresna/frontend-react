@@ -8,12 +8,12 @@ import {
   VStack, 
   Box, 
   Heading, 
-  useToast, 
   Text, 
   Link,
   Flex,
   FormErrorMessage
 } from "@chakra-ui/react";
+import useToaster from "../components/Toaster";
 import { register, setAuthToken } from '../api/auth';
 
 const Register: React.FC = () => {
@@ -23,7 +23,7 @@ const Register: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
-  const toast = useToast();
+  const { showToast } = useToaster();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,22 +37,11 @@ const Register: React.FC = () => {
       // Assuming the backend expects a role, we'll send 'user' as default
       const { token } = await register(username, password, 'user');
       setAuthToken(token);
-      toast({
-        title: "Registrasi berhasil",
-        status: "success",
-        duration: 2000,
-        isClosable: true,
-      });
+      showToast("Registrasi berhasil", "Silahkan Login terlebih dahulu", "success");
       navigate('/dashboard');
     } catch (error) {
       console.error('Registration failed:', error);
-      toast({
-        title: "Registrasi gagal",
-        description: "Silakan coba lagi",
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-      });
+      showToast("Registrasi gagal", "Silakan coba lagi", "error");
     } finally {
       setIsLoading(false);
     }

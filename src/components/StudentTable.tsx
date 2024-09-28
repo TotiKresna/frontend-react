@@ -61,7 +61,7 @@ const StudentTable: React.FC<StudentTableProps> = ({
             <Td>{student.kelas}</Td>
             {isSuperAdminOrAdmin && (
               <Td>
-                <Button onClick={() => student._id && onOpenModal(student._id)} size="sm" colorScheme="blue" mr="2" leftIcon={<FaEdit />}>Edit</Button>
+                <Button aria-label="edit-student" onClick={() => student._id && onOpenModal(student._id)} size="sm" colorScheme="blue" mr="2" leftIcon={<FaEdit />}>Edit</Button>
               </Td>
             )}
           </Tr>
