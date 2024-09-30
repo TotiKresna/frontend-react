@@ -3,7 +3,7 @@ import { Box, Flex, Heading, Button, Input, Spacer } from '@chakra-ui/react';
 import { FaPlus, FaTrash, FaFileExcel, FaFilePdf, FaSync } from 'react-icons/fa';
 import useStudents from '../hooks/StudentsHook';
 import StudentTable from '../components/StudentTable';
-import Pagination from '../components/StudentPagination';
+import Pagination from '../components/Pagination';
 import EditStudentModal from '../modals/EditStudentModal';
 import { exportToPDF, exportToExcel } from '../utils/StudentExport';
 import Loader from '../components/Loader';
@@ -12,6 +12,7 @@ const Students: React.FC = () => {
   const {
     allStudents,
     currentStudents,
+    indexOfFirstStudent,
     loading,
     selectedStudents,
     searchTerm,
@@ -30,6 +31,8 @@ const Students: React.FC = () => {
     handleSelectStudent,
     handleSelectAllStudents,
     handleSort,
+    sortKey,
+    sortOrder,
   } = useStudents();
 
   const isSuperAdminOrAdmin = userRole === 'superadmin' || userRole === 'admin';
@@ -75,12 +78,16 @@ const Students: React.FC = () => {
       <StudentTable 
         currentStudents={currentStudents}
         allStudents={allStudents}
+        indexOfFirstStudent={indexOfFirstStudent}
         selectedStudents={selectedStudents}
         isSuperAdminOrAdmin={isSuperAdminOrAdmin}
         onOpenModal={handleOpenModal}
         onSelectStudent={handleSelectStudent}
         onSelectAllStudents={handleSelectAllStudents}
         onSort={handleSort}
+        sortKey={sortKey}
+        sortOrder={sortOrder}
+        
       />
       <Pagination 
         currentPage={currentPage}

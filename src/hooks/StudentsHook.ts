@@ -11,7 +11,8 @@ const useStudents = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [studentsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortConfig, setSortConfig] = useState<{ key: StudentSortKeys; direction: 'ascending' | 'descending' } | null>(null);
+  const [sortKey, setSortKey] = useState<StudentSortKeys | null>(null);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const { showToast } = useToaster();
   const [userRole, setUserRole] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -95,13 +96,22 @@ const useStudents = () => {
   };
 
   const handleSort = (key: StudentSortKeys) => {
-    let direction: 'ascending' | 'descending' = 'ascending';
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
+    if (sortKey === key) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortKey(key);
+      setSortOrder('asc');
     }
-    setSortConfig({ key, direction });
   };
 
+  const sortedStudents = [...allStudents].sort((a, b) => {
+    if (sortKey !== null) {
+      if (a[sortKey] < b[sortKey]) return sortOrder === 'asc' ? -1 : 1;
+      if (a[sortKey] > b[sortKey]) return sortOrder === 'asc' ? 1 : -1;
+    }
+    return 0;
+  });
+  
   const handleRefresh = () => {
     setLoading(true);
     fetchStudents()
@@ -115,18 +125,6 @@ const useStudents = () => {
       });
   };
 
-  const sortedStudents = [...allStudents].sort((a, b) => {
-    if (sortConfig !== null) {
-      const { key } = sortConfig;
-      if (a[key] < b[key]) {
-        return sortConfig.direction === 'ascending' ? -1 : 1;
-      }
-      if (a[key] > b[key]) {
-        return sortConfig.direction === 'ascending' ? 1 : -1;
-      }
-    }
-    return 0;
-  });
 
   const filteredStudents = sortedStudents.filter((student) =>
     student.nama.toLowerCase().includes(searchTerm.toLowerCase())
@@ -145,6 +143,7 @@ const useStudents = () => {
   return {
     allStudents,
     currentStudents,
+    indexOfFirstStudent,
     loading,
     selectedStudents,
     searchTerm,
@@ -163,6 +162,8 @@ const useStudents = () => {
     handleSelectStudent,
     handleSelectAllStudents,
     handleSort,
+    sortKey,
+    sortOrder,
   };
 };
 

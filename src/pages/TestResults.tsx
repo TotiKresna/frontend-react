@@ -16,6 +16,7 @@ import {
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { fetchTestResults, deleteMultipleTestResults } from "../api/testResults";
+import Pagination from '../components/Pagination';
 import Loader from "../components/Loader";
 import useToaster from "../components/Toaster";
 import { FaPlus, FaTrash, FaFileExcel, FaFilePdf, FaEdit, FaSync } from "react-icons/fa";
@@ -258,19 +259,11 @@ const TestResults = () => {
           </Tbody>
         </Table>
       </Box>
-      <Flex justifyContent="center" mt="4">
-        {Array.from({ length: totalPages }, (_, i) => (
-          <Button
-            key={i + 1}
-            onClick={() => handlePageChange(i + 1)}
-            colorScheme={currentPage === i + 1 ? "blue" : "gray"}
-            mx="1"
-            size="sm"
-          >
-            {i + 1}
-          </Button>
-        ))}
-      </Flex>
+      <Pagination 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </Box>
   );
 };
