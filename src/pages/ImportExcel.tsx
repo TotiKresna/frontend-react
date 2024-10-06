@@ -1,6 +1,6 @@
 // src/pages/ImportExcel.tsx
 import React, { useState, useEffect } from "react";
-import { Box, Button, Input, VStack, Text } from "@chakra-ui/react";
+import { Box, Button, Input, VStack, Alert, AlertIcon, AlertTitle, AlertDescription, } from "@chakra-ui/react";
 import {
   Stepper,
   Step,
@@ -73,7 +73,7 @@ const ImportExcel = () => {
   } 
     else if (status === "failed"){
     stopPolling();
-    showToast("Error", "File gagal diproses.", "error");
+    // showToast("Error", "File gagal diproses.", "error");
   }
     else if (status === "completed") {
     setActiveStep(4); // Complete
@@ -120,11 +120,19 @@ const ImportExcel = () => {
         </Stepper>
 
         {activeStep > 1 && (
-          <Text>Progress: {status}</Text>
+          <Alert status="info">
+            <AlertIcon />
+            <AlertTitle mr={2}>Progress :</AlertTitle>
+            <AlertDescription>{status}</AlertDescription>
+          </Alert>
         )}
 
         {error && (
-          <Text color="red.500">{error}</Text>
+          <Alert status="error">
+            <AlertIcon />
+            <AlertTitle mr={2}>Progress :</AlertTitle>
+            <AlertDescription>{status}</AlertDescription>
+          </Alert>
         )}
       </VStack>
     </Box>

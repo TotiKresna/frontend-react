@@ -57,17 +57,20 @@ export default function Login() {
       width="100wh" 
       align="center" 
       justifyContent="center"
-      bgColor="gray.500"
+      backgroundImage="url('/images/quad.svg')"
+      backgroundSize="cover"
+      backgroundPosition="center"
+      backgroundRepeat="no-repeat"
     >
       <Box 
         borderWidth={1}
         px={4}
-        width="full"
+        width="80%"
         maxWidth="500px"
         borderRadius={4}
         textAlign="center"
         boxShadow="lg"
-        bg={useColorModeValue('whiteAlpha.800', 'gray.900')}
+        bg={useColorModeValue('whiteAlpha.800', 'blackAlpha.800')}
       >
         <Avatar mt="4" bg="teal.500" />
         <Heading color="teal.400">Welcome</Heading>

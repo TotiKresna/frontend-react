@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Students from "./pages/Students";
 import TestResults from "./pages/TestResults";
-import EditStudent from "./pages/EditStudent";
+// import EditStudent from "./pages/EditStudent";
 import EditTestResult from "./pages/EditTestResult";
 import ImportExcel from "./pages/ImportExcel";
 import Login from './pages/Login';
@@ -22,8 +22,8 @@ const AppRoutes = () => {
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/students" element={<Students />} />
-          <Route path="/students/create" element={<EditStudent />} />
-          <Route path="/students/:id/edit" element={<EditStudent />} />
+          {/* <Route path="/students/create" element={<EditStudent />} /> */}
+          {/* <Route path="/students/:id/edit" element={<EditStudent />} /> */}
           <Route path="/test-results" element={<TestResults />} />
           <Route path="/test-results/create" element={<EditTestResult />} />
           <Route path="/test-results/:id/edit" element={<EditTestResult />} />

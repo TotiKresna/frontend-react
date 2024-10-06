@@ -5,8 +5,15 @@ const theme = extendTheme({
   styles: {
     global: (props: any) => ({
       body: {
-        bg: mode('white', 'gray.600')(props),
-        
+        bg: mode('whiteAlpha', 'gray.800')(props),
+        backgroundImage: mode(
+          "url('/images/quad.svg')",
+          "url('/images/quad.svg')"
+        )(props),
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
       },
     }),
   },
@@ -39,6 +46,19 @@ const theme = extendTheme({
       700: "#1976d2",
       800: "#1565c0",
       900: "#0d47a1",
+    },
+  },
+  components: {
+    Container: {
+      baseStyle: (props: any) => ({
+        backgroundColor: mode('rgba(255, 255, 255, 0.8)', 'rgba(26, 32, 44, 0.8)')(props),
+        backdropFilter: 'blur(10px)',
+        borderRadius: 'lg',
+        boxShadow: mode(
+          '0 4px 6px rgba(0, 0, 0, 0.1)',
+          '0 4px 6px rgba(255, 255, 255, 0.1)'
+        )(props),
+      }),
     },
   },
 });

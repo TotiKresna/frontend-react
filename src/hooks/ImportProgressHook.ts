@@ -13,7 +13,7 @@ export const useImportProgress = () => {
       if (response.status === "completed") {
         setIsPolling(false);
       }
-    } catch (err) {
+    } catch (error) {
       setError('Failed to fetch progress');
       setIsPolling(false);
     }

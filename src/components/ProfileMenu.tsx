@@ -16,6 +16,7 @@ import { MoonIcon, SunIcon, LockIcon, SettingsIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../api/auth';
 import ManageAccountsModal from '../modals/ManageAccounts';
+import { LogoutConfirmationAlert } from '../components/SweetAlert';
 
 export const useProfileMenu = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -31,15 +32,19 @@ export const useProfileMenu = () => {
     if (storedUserRole) setUserRole(storedUserRole);
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      localStorage.removeItem('username');
-      localStorage.removeItem('role');
-      navigate('/login');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
+  const handleLogout = () => {
+    LogoutConfirmationAlert({
+      onConfirm: async () => {
+        try {
+          await logout();
+          localStorage.removeItem('username');
+          localStorage.removeItem('role');
+          navigate('/login');
+        } catch (error) {
+          console.error('Logout failed:', error);
+        }
+      }
+    });
   };
 
   const ProfileMenu = () => (

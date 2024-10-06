@@ -40,7 +40,14 @@ export default function Sidebar({ children }: { children: ReactNode }) {
   };
 
   return (
-    <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
+    <Box 
+      minH="100vh" 
+      bg={useColorModeValue('whiteAlpha.700', 'blackAlpha.700')}
+      backgroundImage="url('/images/quad.svg')"
+      backgroundSize="auto"
+      backgroundPosition="bottom"
+      backgroundRepeat="no-repeat"
+    >
       <SidebarContent onClose={onClose}  refreshContent={refreshContent} display={{ base: 'none', md: 'block' }} />
       <Drawer
         autoFocus={false}
@@ -83,7 +90,7 @@ const SidebarContent = ({ onClose, refreshContent, ...rest }: SidebarProps) => {
 
   return (
     <Box
-      bg={useColorModeValue('white', 'gray.900')}
+      bg={useColorModeValue('whiteAlpha.800', 'blackAlpha.800')}
       borderRight="1px"
       borderRightColor={useColorModeValue('gray.200', 'gray.700')}
       w={{ base: 'full', md: 60 }}
@@ -182,7 +189,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       px={{ base: 4, md: 24 }}
       height="20"
       alignItems="center"
-      bg={useColorModeValue('white', 'gray.900')}
+      bg={useColorModeValue('whiteAlpha.700', 'blackAlpha.700')}
       borderBottomWidth="1px"
       borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
       justifyContent="space-between"

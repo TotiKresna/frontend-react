@@ -11,7 +11,8 @@ import {
   Text, 
   Link,
   Flex,
-  FormErrorMessage
+  FormErrorMessage,
+  useColorModeValue
 } from "@chakra-ui/react";
 import useToaster from "../components/Toaster";
 import { register, setAuthToken } from '../api/auth';
@@ -34,7 +35,6 @@ const Register: React.FC = () => {
     setPasswordError('');
     setIsLoading(true);
     try {
-      // Assuming the backend expects a role, we'll send 'user' as default
       const { token } = await register(username, password, 'user');
       setAuthToken(token);
       showToast("Registrasi berhasil", "Silahkan Login terlebih dahulu", "success");
@@ -47,66 +47,79 @@ const Register: React.FC = () => {
     }
   };
 
+  const bgColor = useColorModeValue('whiteAlpha.800', 'blackAlpha.800');
+
   return (
-    <Flex minHeight="100vh" width="full" align="center" justifyContent="center">
+    <Flex 
+      minHeight="100vh" 
+      width="full" 
+      align="center" 
+      justifyContent="center"
+      backgroundImage="url('/images/quad.svg')"
+      backgroundSize="cover"
+      backgroundPosition="center"
+      backgroundRepeat="no-repeat"
+    >
       <Box 
-        borderWidth={1}
-        px={4}
+        bg={bgColor}
+        px={8}
+        py={8}
+        m={4}
         width="full"
-        maxWidth="500px"
-        borderRadius={4}
+        maxWidth="480px"
+        borderRadius="lg"
         textAlign="center"
-        boxShadow="lg"
       >
-        <Box p={4}>
-          <Heading as="h1" size="lg" mb={6}>Register</Heading>
-          <form onSubmit={handleSubmit}>
-            <VStack spacing={4}>
-              <FormControl isRequired>
-                <FormLabel>Username</FormLabel>
-                <Input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Username"
-                />
-              </FormControl>
-              <FormControl isRequired>
-                <FormLabel>Password</FormLabel>
-                <Input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Password"
-                />
-              </FormControl>
-              <FormControl isRequired isInvalid={!!passwordError}>
-                <FormLabel>Confirm Password</FormLabel>
-                <Input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Confirm Password"
-                />
-                <FormErrorMessage>{passwordError}</FormErrorMessage>
-              </FormControl>
-              <Button
-                type="submit"
-                colorScheme="blue"
-                width="full"
-                isLoading={isLoading}
-              >
-                Register
-              </Button>
-            </VStack>
-          </form>
-          <Text mt={4}>
-            Sudah punya akun?{" "}
-            <Link as={RouterLink} to="/login" color="blue.500">
-              Login di sini
-            </Link>
-          </Text>
-        </Box>
+        <Heading as="h1" size="xl" mb={6}>Register</Heading>
+        <form onSubmit={handleSubmit}>
+          <VStack spacing={4}>
+            <FormControl isRequired>
+              <FormLabel>Username</FormLabel>
+              <Input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Username"
+                bg={useColorModeValue('white', 'gray.900')}
+              />
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel>Password</FormLabel>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                bg={useColorModeValue('white', 'gray.900')}
+              />
+            </FormControl>
+            <FormControl isRequired isInvalid={!!passwordError}>
+              <FormLabel>Confirm Password</FormLabel>
+              <Input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm Password"
+                bg={useColorModeValue('white', 'gray.900')}
+              />
+              <FormErrorMessage>{passwordError}</FormErrorMessage>
+            </FormControl>
+            <Button
+              type="submit"
+              colorScheme="blue"
+              width="full"
+              isLoading={isLoading}
+            >
+              Register
+            </Button>
+          </VStack>
+        </form>
+        <Text mt={4}>
+          Sudah punya akun?{" "}
+          <Link as={RouterLink} to="/login" color="blue.500">
+            Login di sini
+          </Link>
+        </Text>
       </Box>
     </Flex>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Thead, Tbody, Tr, Th, Td, Checkbox, Button, Flex } from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tr, Th, Td, Checkbox, Button, Flex, useColorModeValue } from '@chakra-ui/react';
 import { FaEdit } from 'react-icons/fa';
 import { TriangleUpIcon, TriangleDownIcon } from '@chakra-ui/icons';
 import { Student, StudentSortKeys } from '../types/types';
@@ -36,10 +36,11 @@ const StudentTable: React.FC<StudentTableProps> = ({
     if (sortKey !== columnKey) return null;
     return sortOrder === 'asc' ? <TriangleUpIcon ml={1} /> : <TriangleDownIcon ml={1} />;
   };
+  const tableHeadBgColor = useColorModeValue('gray.100', 'gray.800');
 
   return (
-    <Table variant="simple" mt="5" size="sm">
-      <Thead>
+    <Table variant="simple" mt="0" size="sm">
+      <Thead bgColor={tableHeadBgColor}>
         <Tr>
           {isSuperAdminOrAdmin && (
             <Th>

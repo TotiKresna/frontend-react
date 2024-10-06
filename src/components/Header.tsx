@@ -10,7 +10,7 @@ import { useProfileMenu } from './ProfileMenu';
 export default function Header() {
   const { ProfileMenu } = useProfileMenu();
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const bgColor = useColorModeValue('gray.100', 'gray.900');
+  const bgColor = useColorModeValue('whiteAlpha.100', 'blackAlpha.100');
 
     // Jika dalam mode mobile, tidak render apapun
     if (isMobile) {

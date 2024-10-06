@@ -30,7 +30,8 @@ const scoreRanges = [
 
 const OpmHistogramChart: React.FC = () => {
   const [chartData, setChartData] = useState<Record<string, HistogramData[]>>({});
-  const cardBg = useColorModeValue('whiteAlpha.500', 'gray.700');
+  const boxBg = useColorModeValue('whiteAlpha.900', 'gray.800');
+  const cardBg = useColorModeValue('whiteAlpha.300', 'gray.800');
   const tooltipBg = useColorModeValue('white', 'gray.500');
   const cardShadow = useColorModeValue('md', 'dark-lg');
 
@@ -99,8 +100,8 @@ const OpmHistogramChart: React.FC = () => {
   );
 
   return (
-    <Box p={5}>
-      <Heading as="h4" size="lg" mb={6}>Histogram Skor Operasi Matematika</Heading>
+    <Box p={5} bg={boxBg} borderRadius={4}>
+      <Heading as="h4" size="md" mb={6} textAlign="center">📊 Histogram Skor Operasi Matematika</Heading>
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
         {Object.keys(chartData).map(renderChart)}
       </SimpleGrid>
