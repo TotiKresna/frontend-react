@@ -70,7 +70,7 @@ export default function Login() {
         borderRadius={4}
         textAlign="center"
         boxShadow="lg"
-        bg={useColorModeValue('whiteAlpha.800', 'blackAlpha.800')}
+        bg={useColorModeValue('white', 'grey.600')}
       >
         <Avatar mt="4" bg="teal.500" />
         <Heading color="teal.400">Welcome</Heading>
