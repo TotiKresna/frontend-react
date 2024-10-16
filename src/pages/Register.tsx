@@ -66,11 +66,13 @@ const Register: React.FC = () => {
         py={8}
         m={4}
         width="full"
+        borderWidth={1}
         maxWidth="480px"
         borderRadius="lg"
+        boxShadow="lg"
         textAlign="center"
       >
-        <Heading as="h1" size="xl" mb={6}>Register</Heading>
+        <Heading color="orange.400" as="h1" size="xl" mb={6}>Register</Heading>
         <form onSubmit={handleSubmit}>
           <VStack spacing={4}>
             <FormControl isRequired>
@@ -106,7 +108,7 @@ const Register: React.FC = () => {
             </FormControl>
             <Button
               type="submit"
-              colorScheme="blue"
+              colorScheme="orange"
               width="full"
               isLoading={isLoading}
             >
@@ -116,7 +118,7 @@ const Register: React.FC = () => {
         </form>
         <Text mt={4}>
           Sudah punya akun?{" "}
-          <Link as={RouterLink} to="/login" color="blue.500">
+          <Link as={RouterLink} to="/login" color="orange.500">
             Login di sini
           </Link>
         </Text>

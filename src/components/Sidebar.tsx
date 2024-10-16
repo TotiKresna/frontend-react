@@ -44,7 +44,7 @@ export default function Sidebar({ children }: { children: ReactNode }) {
       minH="100vh" 
       bg={useColorModeValue('whiteAlpha.700', 'blackAlpha.700')}
       backgroundImage="url('/images/quad.svg')"
-      backgroundSize="auto"
+      backgroundSize="cover"
       backgroundPosition="bottom"
       backgroundRepeat="no-repeat"
     >

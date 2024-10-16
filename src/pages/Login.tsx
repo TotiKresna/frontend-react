@@ -72,8 +72,8 @@ export default function Login() {
         boxShadow="lg"
         bg={useColorModeValue('whiteAlpha.800', 'blackAlpha.800')}
       >
-        <Avatar mt="4" bg="teal.500" />
-        <Heading color="teal.400">Welcome</Heading>
+        <Avatar mt="4" size="md" bg="orange.700" />
+        <Heading color="orange.400">Welcome</Heading>
         <Box p={4}>
           
           <form onSubmit={handleSubmit}>
