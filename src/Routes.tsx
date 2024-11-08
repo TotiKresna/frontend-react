@@ -11,6 +11,8 @@ import PrivateRoute from './components/PrivateRoute';
 import Layout from "./components/Layout";
 import { ImportProgressProvider } from "./contexts/ImportProgressContext"
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const AppRoutes = () => {
 
   return (
@@ -18,6 +20,10 @@ const AppRoutes = () => {
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route 
+        path="/api-docs" 
+        element={<Navigate to={`${API_URL}/api-docs`} replace />} 
+      />
       <Route element={<PrivateRoute />}>
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
