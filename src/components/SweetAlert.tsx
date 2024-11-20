@@ -15,6 +15,22 @@ interface LogoutConfirmationAlertProps {
   onConfirm: () => void;
 }
 
+// Custom SweetAlert configuration
+const customSwalConfig = {
+  customClass: {
+    container: 'my-swal-container',  // Add custom class for z-index control
+  }
+};
+
+// Add global styles for SweetAlert
+const style = document.createElement('style');
+style.innerHTML = `
+  .my-swal-container {
+    z-index: 9999 !important;
+  }
+`;
+document.head.appendChild(style);
+
 export const WarningAlert = ({ 
   title = 'Warning', 
   text, 
@@ -25,7 +41,8 @@ export const WarningAlert = ({
     text: text,
     icon: 'warning',
     confirmButtonColor: '#3085d6',
-    confirmButtonText: confirmButtonText
+    confirmButtonText: confirmButtonText,
+    ...customSwalConfig
   });
 };
 
@@ -37,15 +54,17 @@ export const DeleteConfirmationAlert = ({ onConfirm, itemName }: DeleteConfirmat
     showCancelButton: true,
     confirmButtonColor: 'green',
     cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, delete it!'
+    confirmButtonText: 'Yes, delete it!',
+    ...customSwalConfig
   }).then((result) => {
     if (result.isConfirmed) {
       onConfirm();
-      Swal.fire(
-        'Deleted!',
-        `${itemName} has been deleted.`,
-        'success'
-      );
+      Swal.fire({
+        title: 'Deleted!',
+        text: `${itemName} has been deleted.`,
+        icon: 'success',
+        ...customSwalConfig
+      });
     }
   });
 };
@@ -58,7 +77,8 @@ export const LogoutConfirmationAlert = ({ onConfirm }: LogoutConfirmationAlertPr
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, logout'
+    confirmButtonText: 'Yes, logout',
+    ...customSwalConfig
   }).then((result) => {
     if (result.isConfirmed) {
       onConfirm();

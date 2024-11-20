@@ -14,6 +14,7 @@ import {
   Input,
   Select,
   useDisclosure,
+  FormErrorMessage,
 } from '@chakra-ui/react';
 import useToaster from '../components/Toaster';
 import { createUser, updateUser } from '../api/auth';
@@ -24,12 +25,21 @@ interface User {
   role: string;
 }
 
+interface FormData {
+  username: string;
+  password: string;
+  confirmPassword: string;
+  role: string;
+}
+
 export const useFormAccountModal = (onSuccess: () => void) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user, setUser] = useState<User | null>(null);
-  const formRef = useRef({
+  const [passwordError, setPasswordError] = useState<string>('');
+  const formRef = useRef<FormData>({
     username: '',
     password: '',
+    confirmPassword: '',
     role: '',
   });
   const { showToast } = useToaster();
@@ -39,15 +49,18 @@ export const useFormAccountModal = (onSuccess: () => void) => {
       formRef.current = {
         username: selectedUser.username,
         password: '',
+        confirmPassword: '',
         role: selectedUser.role,
       };
     } else {
       formRef.current = {
         username: '',
         password: '',
+        confirmPassword: '',
         role: '',
       };
     }
+    setPasswordError('');
   }, []);
 
   useEffect(() => {
@@ -72,13 +85,47 @@ export const useFormAccountModal = (onSuccess: () => void) => {
     onClose();
   }, [onClose, resetForm]);
 
+  const validatePasswords = (): boolean => {
+    // If updating and no new password is provided, skip validation
+    if (user && !formRef.current.password && !formRef.current.confirmPassword) {
+      return true;
+    }
+
+    // Check if passwords match
+    if (formRef.current.password !== formRef.current.confirmPassword) {
+      setPasswordError('Passwords do not match');
+      return false;
+    }
+
+    // Check minimum password length (optional)
+    // if (formRef.current.password.length < 6) {
+    //   setPasswordError('Password must be at least 6 characters long');
+    //   return false;
+    // }
+
+    setPasswordError('');
+    return true;
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    formRef.current[name as keyof typeof formRef.current] = value;
+    formRef.current[name as keyof FormData] = value;
+
+    // Clear password error when user types in either password field
+    if (name === 'password' || name === 'confirmPassword') {
+      setPasswordError('');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate passwords before submission
+    if (!validatePasswords()) {
+      showToast('Error', passwordError, 'error');
+      return;
+    }
+
     try {
       if (user) {
         await updateUser(user._id, formRef.current.username, formRef.current.password, formRef.current.role);
@@ -113,7 +160,8 @@ export const useFormAccountModal = (onSuccess: () => void) => {
                   placeholder="Enter username"
                 />
               </FormControl>
-              <FormControl isRequired={!user}>
+
+              <FormControl isRequired={!user} isInvalid={!!passwordError}>
                 <FormLabel>Password</FormLabel>
                 <Input
                   name="password"
@@ -122,7 +170,21 @@ export const useFormAccountModal = (onSuccess: () => void) => {
                   onChange={handleChange}
                   placeholder={user ? 'Leave blank to keep current password' : 'Enter password'}
                 />
+                <FormErrorMessage>{passwordError}</FormErrorMessage>
               </FormControl>
+
+              <FormControl isRequired={!user || !!formRef.current.password} isInvalid={!!passwordError}>
+                <FormLabel>Confirm Password</FormLabel>
+                <Input
+                  name="confirmPassword"
+                  type="password"
+                  defaultValue={formRef.current.confirmPassword}
+                  onChange={handleChange}
+                  placeholder={user ? 'Leave blank to keep current password' : 'Confirm password'}
+                />
+                <FormErrorMessage>{passwordError}</FormErrorMessage>
+              </FormControl>
+
               <FormControl isRequired>
                 <FormLabel>Role</FormLabel>
                 <Select
@@ -131,7 +193,7 @@ export const useFormAccountModal = (onSuccess: () => void) => {
                   onChange={handleChange}
                   placeholder="Select role"
                 >
-                  <option value="user">User</option>
+                  <option value="user">User -Update Only-</option>
                   <option value="admin">Admin</option>
                   <option disabled value="superadmin">Superadmin</option>
                 </Select>

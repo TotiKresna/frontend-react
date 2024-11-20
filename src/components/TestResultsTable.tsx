@@ -5,16 +5,18 @@ import { FaEdit } from "react-icons/fa";
 
 interface TestResultsTableProps {
   results: any[];
+  allFilteredResults: any[]; // Add this prop for all filtered results
   selectedResults: string[];
   isSuperAdminOrAdmin: boolean;
   onSelectResult: (id: string) => void;
-  onSelectAll: (checked: boolean) => void;
+  onSelectAll: (checked: boolean, allResults: any[]) => void;
   onSort: (key: string) => void;
   startIndex: number;
 }
 
 export const TestResultsTable: React.FC<TestResultsTableProps> = ({
   results,
+  allFilteredResults, // Add this prop
   selectedResults,
   isSuperAdminOrAdmin,
   onSelectResult,
@@ -22,14 +24,22 @@ export const TestResultsTable: React.FC<TestResultsTableProps> = ({
   onSort,
   startIndex,
 }) => {
+  // Check if all filtered results are selected, not just the current page
+  const areAllSelected = allFilteredResults.length > 0 && 
+    allFilteredResults.every(result => selectedResults.includes(result._id));
+
+  // Check if some items are selected
+  const areSomeSelected = selectedResults.length > 0 && !areAllSelected;
+
   const TableHeader: React.FC = () => (
     <Tr>
       {isSuperAdminOrAdmin && (
         <Th>
           <Checkbox
             colorScheme='green'
-            isChecked={selectedResults.length === results.length}
-            onChange={(e) => onSelectAll(e.target.checked)}
+            isChecked={areAllSelected}
+            onChange={(e) => onSelectAll(e.target.checked, allFilteredResults)}
+            isIndeterminate={areSomeSelected}
           />
         </Th>
       )}

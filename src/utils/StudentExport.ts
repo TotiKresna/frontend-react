@@ -19,7 +19,6 @@ export const exportToPDF = (students: Student[]) => {
 export const exportToExcel = (students: Student[]) => {
   const worksheet = XLSX.utils.json_to_sheet(
     students.map((student, index) => ({
-      No: index + 1,
       Nama: student.nama,
       Kelas: student.kelas,
     }))

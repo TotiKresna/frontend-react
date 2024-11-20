@@ -1,6 +1,20 @@
-// src/pages/ImportExcel.tsx
 import React, { useState, useEffect } from "react";
-import { Box, Button, Input, VStack, Alert, AlertIcon, AlertTitle, AlertDescription, } from "@chakra-ui/react";
+import { 
+  Box, 
+  Button, 
+  VStack, 
+  Alert, 
+  AlertIcon, 
+  AlertTitle, 
+  AlertDescription,
+  Input,
+  FormControl,
+  Icon,
+  Text,
+  useColorModeValue,
+  Center,
+  InputGroup,
+} from "@chakra-ui/react";
 import {
   Stepper,
   Step,
@@ -14,8 +28,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import useToaster from "../components/Toaster";
 import Loader from "../components/Loader";
+import ExcelFormatHeader from "../components/ExcelFormatHeader";
 import { importExcel } from "../api/import";
 import { useImportProgress } from '../hooks/ImportProgressHook';
+import { FiUploadCloud } from 'react-icons/fi';
 
 const steps = [
   { title: 'First', description: 'Select File' },
@@ -35,6 +51,10 @@ const ImportExcel = () => {
     count: steps.length,
   });
 
+  // Color mode values for styling
+  const borderColor = useColorModeValue('gray.200', 'gray.600');
+  const hoverBg = useColorModeValue('gray.50', 'gray.700');
+  
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setFile(event.target.files[0]);
@@ -48,52 +68,96 @@ const ImportExcel = () => {
       return;
     }
 
-    setLoading(true); // Set loading to true when starting the upload
-    setActiveStep(1); // File selected
+    setLoading(true);
+    setActiveStep(1);
 
     try {
       const response = await importExcel(file);
       showToast("Info", response.data.info, "info");
-      setActiveStep(2); // Upload successful
+      setActiveStep(2);
       startPolling();
-      // navigate("/test-results");
     } catch (error) {
       console.log(error)
       setActiveStep(0);
-      // showToast("Error", "Failed to import file.", "error");
     } finally {
-      setLoading(false); // Set loading to false after the upload is done
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-  if (status === "processing") {
-    setActiveStep(3); // Processing
-    showToast("Tunggu", "File sedang diproses.", "info");
-  } 
-    else if (status === "failed"){
-    stopPolling();
-    // showToast("Error", "File gagal diproses.", "error");
-  }
+    if (status === "processing") {
+      setActiveStep(3);
+      showToast("Tunggu", "File sedang diproses.", "info");
+    } 
+    else if (status === "failed") {
+      stopPolling();
+    }
     else if (status === "completed") {
-    setActiveStep(4); // Complete
-    stopPolling();
-    showToast("File Berhasil Diproses", "Proses berdasarkan antrian.", "success");
-    navigate('/test-results');
-  }
-}, [status, stopPolling, navigate, showToast, setActiveStep]);
+      setActiveStep(4);
+      stopPolling();
+      showToast("File Berhasil Diproses", "Proses berdasarkan antrian.", "success");
+      navigate('/test-results');
+    }
+  }, [status, stopPolling, navigate, showToast, setActiveStep]);
 
   if (loading) {
     return <Loader />;
   }
 
-
   return (
-    <Box p="5">
+    <Box p="2" mr="4">
       <VStack spacing={4} align="stretch">
+        <ExcelFormatHeader/>
         <form onSubmit={handleSubmit}>
-          <Input type="file" accept=".xlsx, .xls" onChange={handleFileChange} mb="3" />
-          <Button size="sm" type="submit" colorScheme="blue" isDisabled={activeStep > 0}>
+          <FormControl>
+            <InputGroup>
+              <Center
+                w="full"
+                h="100px"
+                border="2px dashed"
+                borderColor={borderColor}
+                borderRadius="md"
+                px={6}
+                py={4}
+                cursor="pointer"
+                transition="all 0.2s"
+                _hover={{ bg: hoverBg }}
+                position="relative"
+              >
+                <Input
+                  type="file"
+                  height="100%"
+                  width="100%"
+                  position="absolute"
+                  top="0"
+                  left="0"
+                  opacity="0"
+                  aria-hidden="true"
+                  accept=".xlsx, .xls"
+                  onChange={handleFileChange}
+                  cursor="pointer"
+                />
+                <VStack spacing={2}>
+                  <Icon as={FiUploadCloud} boxSize={6} color="blue.500" />
+                  <Text fontSize="sm" color="gray.600">
+                    {file ? file.name : "Drag and drop your Excel file here or click to browse"}
+                  </Text>
+                  <Text fontSize="xs" color="gray.500">
+                    Supports .xlsx and .xls files
+                  </Text>
+                </VStack>
+              </Center>
+            </InputGroup>
+          </FormControl>
+
+          <Button 
+            size="sm" 
+            type="submit" 
+            colorScheme="blue" 
+            isDisabled={activeStep > 0}
+            mt={4}
+            w="20vw"
+          >
             Import Excel
           </Button>
         </form>

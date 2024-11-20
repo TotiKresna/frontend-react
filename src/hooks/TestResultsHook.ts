@@ -42,6 +42,16 @@ export const useTestResults = () => {
     );
   };
 
+  const handleSelectAll = (checked: boolean, allFilteredResults: any[]) => {
+    if (checked) {
+      // Select all filtered results, not just the current page
+      const allIds = allFilteredResults.map(result => result._id);
+      setSelectedResults(allIds);
+    } else {
+      setSelectedResults([]);
+    }
+  };
+
   const handleDeleteMultiple = () => {
     if (selectedResults.length === 0) {
       WarningAlert({ text: 'Anda belum memilih data' });
@@ -72,6 +82,7 @@ export const useTestResults = () => {
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
+    setSelectedResults([]); // Clear selections when searching
   };
 
   const handleSort = (key: string) => {
@@ -104,6 +115,7 @@ export const useTestResults = () => {
     loading,
     searchTerm,
     handleSelectResult,
+    handleSelectAll,
     handleDeleteMultiple,
     handleSearch,
     handleSort,

@@ -20,6 +20,7 @@ import {
 import useToaster from '../components/Toaster';
 import { getUsers, deleteUser } from '../api/auth';
 import { useFormAccountModal } from '../modals/FormAccount';
+import { DeleteConfirmationAlert } from '../components/SweetAlert';
 
 interface User {
   _id: string;
@@ -51,16 +52,65 @@ const ManageAccountsModal: React.FC<ManageAccountsModalProps> = ({ isOpen, onClo
     }
   }
 
-  const handleDeleteUser = async (userId: string) => {
+  const handleDeleteUser = async (userId: string, username: string) => {
     try {
-      await deleteUser(userId);
-      fetchUsers(); // Refresh the user list
-      showToast('Success','User deleted successfully','success');
+      // Find the user to check their role
+      const userToDelete = users.find(user => user._id === userId);
+      
+      if (!userToDelete) {
+        showToast('Error', 'User not found', 'error');
+        return;
+      }
+
+      // Check if user is superadmin
+      if (userToDelete.role.toLowerCase() === 'superadmin') {
+        showToast('Warning', 'Superadmin account cannot be deleted', 'warning');
+        return;
+      }
+
+      // Show delete confirmation using SweetAlert
+      DeleteConfirmationAlert({
+        onConfirm: async () => {
+          try {
+            await deleteUser(userId);
+            await fetchUsers(); // Refresh the user list after successful deletion
+            showToast('Success', 'User deleted successfully', 'success');
+          } catch (error) {
+            console.error('Error deleting user:', error);
+            showToast('Error', 'Error deleting user', 'error');
+          }
+        },
+        itemName: username
+      });
 
     } catch (error) {
-      console.error('Error deleting user:', error);
-      showToast('Error', 'Error deleting user:', 'error');
+      console.error('Error in delete handler:', error);
+      showToast('Error', 'Error processing delete request', 'error');
     }
+  };
+
+  const renderActionButtons = (user: User) => {
+    const isSuperAdmin = user.role.toLowerCase() === 'superadmin';
+    
+    return (
+      <HStack spacing={2}>
+        <Button 
+          size="sm" 
+          onClick={() => handleOpenForm(user)}
+        >
+          Update
+        </Button>
+        <Button 
+          size="sm" 
+          colorScheme="red" 
+          onClick={() => handleDeleteUser(user._id, user.username)}
+          isDisabled={isSuperAdmin}
+          title={isSuperAdmin ? "Superadmin account cannot be deleted" : "Delete user"}
+        >
+          Delete
+        </Button>
+      </HStack>
+    );
   };
 
   return (
@@ -72,7 +122,9 @@ const ManageAccountsModal: React.FC<ManageAccountsModalProps> = ({ isOpen, onClo
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing={4}>
-              <Button colorScheme="blue" onClick={() => handleOpenForm()}>Create New Account</Button>
+              <Button colorScheme="blue" onClick={() => handleOpenForm()}>
+                Create New Account
+              </Button>
               <Table variant="simple">
                 <Thead>
                   <Tr>
@@ -86,12 +138,7 @@ const ManageAccountsModal: React.FC<ManageAccountsModalProps> = ({ isOpen, onClo
                     <Tr key={user._id}>
                       <Td>{user.username}</Td>
                       <Td>{user.role}</Td>
-                      <Td>
-                        <HStack spacing={2}>
-                          <Button size="sm" onClick={() => handleOpenForm(user)}>Update</Button>
-                          <Button size="sm" colorScheme="red" onClick={() => handleDeleteUser(user._id)}>Delete</Button>
-                        </HStack>
-                      </Td>
+                      <Td>{renderActionButtons(user)}</Td>
                     </Tr>
                   ))}
                 </Tbody>

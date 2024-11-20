@@ -26,6 +26,7 @@ const TestResults: React.FC = () => {
     searchTerm,
     handleSelectResult,
     handleDeleteMultiple,
+    handleSelectAll,
     handleSearch,
     handleSort,
     fetchData,
@@ -108,12 +109,11 @@ const TestResults: React.FC = () => {
         </Box>
         <TestResultsTable
           results={currentResults}
+          allFilteredResults={testResults}
           selectedResults={selectedResults}
           isSuperAdminOrAdmin={isSuperAdminOrAdmin}
           onSelectResult={handleSelectResult}
-          onSelectAll={(checked) => 
-            checked ? testResults.map(result => result._id) : []
-          }
+          onSelectAll={handleSelectAll}
           onSort={handleSort}
           startIndex={indexOfFirstResult}
         />
