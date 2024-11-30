@@ -77,6 +77,7 @@ export const TestResultsTable: React.FC<TestResultsTableProps> = ({
       {isSuperAdminOrAdmin && (
         <Td>
           <Button
+            aria-label="edit"
             as={Link}
             to={`/test-results/${result._id}/edit`}
             size="sm"

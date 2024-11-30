@@ -110,6 +110,7 @@ const EditTestResult: React.FC = () => {
               <FormControl isRequired>
                 <FormLabel>Nama</FormLabel>
                 <Input
+                  placeholder="Nama Siswa"
                   type="text"
                   value={testResult.nama}
                   onChange={(e) => setTestResult({ ...testResult, nama: e.target.value })}
@@ -120,6 +121,7 @@ const EditTestResult: React.FC = () => {
               <FormControl isRequired>
                 <FormLabel>Kelas</FormLabel>
                 <Input
+                  placeholder="Kelas"
                   type="text"
                   value={testResult.kelas}
                   onChange={(e) => setTestResult({ ...testResult, kelas: e.target.value })}
@@ -133,6 +135,7 @@ const EditTestResult: React.FC = () => {
               <FormControl>
                 <FormLabel>Operasi Tambah</FormLabel>
                 <Input
+                  placeholder="Operasi Tambah"
                   type="number"
                   value={testResult.opm_tambah}
                   onChange={(e) => setTestResult({ ...testResult, opm_tambah: e.target.value })}
@@ -142,6 +145,7 @@ const EditTestResult: React.FC = () => {
               <FormControl>
                 <FormLabel>Operasi Kurang</FormLabel>
                 <Input
+                  placeholder="Operasi Kurang"
                   type="number"
                   value={testResult.opm_kurang}
                   onChange={(e) => setTestResult({ ...testResult, opm_kurang: e.target.value })}
@@ -151,6 +155,7 @@ const EditTestResult: React.FC = () => {
               <FormControl>
                 <FormLabel>Operasi Kali</FormLabel>
                 <Input
+                  placeholder="Operasi Kali"
                   type="number"
                   value={testResult.opm_kali}
                   onChange={(e) => setTestResult({ ...testResult, opm_kali: e.target.value })}
@@ -160,6 +165,7 @@ const EditTestResult: React.FC = () => {
               <FormControl>
                 <FormLabel>Operasi Bagi</FormLabel>
                 <Input
+                  placeholder="Operasi Bagi"
                   type="number"
                   value={testResult.opm_bagi}
                   onChange={(e) => setTestResult({ ...testResult, opm_bagi: e.target.value })}

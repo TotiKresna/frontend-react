@@ -12,18 +12,18 @@ describe('Dashboard', () => {
   
     it('Interaksi dengan tombol sidebar', () => {
       // Test sidebar navigation buttons
-      cy.get('a[href="/dashboard"]').click();
+      cy.contains('Dashboard').click(); // Menggunakan teks tombol 'Dashboard'
       cy.url().should('include', '/dashboard');
   
-      cy.get('a[href="/students"]').click();
+      cy.contains('Data Siswa').click(); // Menggunakan teks tombol 'Data Siswa'
       cy.url().should('include', '/students');
       cy.go('back');
   
-      cy.get('a[href="/test-results"]').click();
+      cy.contains('Data Nilai').click(); // Menggunakan teks tombol 'Data Nilai'
       cy.url().should('include', '/test-results');
       cy.go('back');
   
-      cy.get('a[href="/import"]').click();
+      cy.contains('Import Nilai').click(); // Menggunakan teks tombol 'Import Nilai'
       cy.url().should('include', '/import');
       cy.go('back');
     });

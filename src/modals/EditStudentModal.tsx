@@ -51,6 +51,7 @@ import {
               <FormControl isRequired>
                 <FormLabel>Nama</FormLabel>
                 <Input
+                  placeholder="Nama"
                   name="nama"
                   value={student.nama}
                   onChange={handleInputChange}
@@ -59,6 +60,7 @@ import {
               <FormControl isRequired mt="3">
                 <FormLabel>Kelas</FormLabel>
                 <Input
+                  placeholder="Kelas"
                   name="kelas"
                   value={student.kelas}
                   onChange={handleInputChange}
